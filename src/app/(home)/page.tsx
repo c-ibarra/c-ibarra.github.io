@@ -1,30 +1,328 @@
 import Link from 'next/link';
 
+const bio =
+  "Program and Release Manager with over 20 years of technical program leadership across financial services and technology environments, now capitalizing that governance and delivery background into applied AI. Currently pursuing a Master's in Data Science (UTEC Universidad Tecnológica / MIT Professional Education) and an MBA (Universidad ORT Uruguay), alongside hands-on delivery of an AI-based credit-scoring platform and a RAG/LLM compliance-automation assistant. Brings a decade-plus track record of information-security governance (PCI DSS, SOC 2) that carries direct weight as AI systems move into regulated environments.";
+
+const quickFacts = [{ label: 'Focus', value: 'Technology Program/Release Management and Governance, transitioning into Applied AI/ML' }];
+
+const stats = [
+  { value: '20+ yrs', label: 'Technology program leadership' },
+  {
+    value: 'R² 0.998',
+    label: 'MS thesis ML pipeline accuracy — 393K industrial time-series observations, AutoGluon ensemble',
+  },
+];
+
+const skillGroups = [
+  {
+    title: 'Program & Governance',
+    skills: [
+      'IT Operations Coordination',
+      'IT Governance & Vendor Management',
+      'Project & Release Management (Agile/Scrum/Kanban)',
+      'ITIL/ITOM',
+      'Information Security (IAM, SSO, MFA, PCI DSS, SOC 2, ISMS)',
+    ],
+  },
+  {
+    title: 'ML & AI',
+    skills: [
+      'Python',
+      'PyTorch',
+      'TensorFlow',
+      'LightGBM',
+      'XGBoost',
+      'CatBoost',
+      'AutoGluon',
+      'scikit-learn',
+      'Optuna',
+      'SHAP',
+      'LangChain',
+      'LangGraph',
+      'RAG',
+      'MCP',
+      'Qdrant',
+      'Weaviate',
+      'Pinecone',
+      'OpenTelemetry',
+      'Arize Phoenix',
+      'AWS SageMaker',
+      'Azure ML',
+      'MLflow',
+      'DVC',
+    ],
+  },
+  {
+    title: 'Financial Systems & Architecture',
+    skills: [
+      'Financial Systems Architecture',
+      'REST APIs',
+      'Web Services',
+      'Microservices',
+      'Middleware/ETL',
+      'Event-Driven Architecture',
+      'ISO 8583',
+      'SWIFT MT/MX',
+    ],
+  },
+  {
+    title: 'Infrastructure & Cloud',
+    skills: [
+      'AWS',
+      'Azure',
+      'GCP',
+      'Linux',
+      'Docker',
+      'Kubernetes',
+      'Windows Server',
+      'SQL Server',
+      'Oracle',
+      'MySQL',
+      'PostgreSQL',
+      'MongoDB',
+      'Snowflake',
+      'Zabbix',
+      'AppDynamics',
+      'Elasticsearch',
+      'Kafka',
+    ],
+  },
+  {
+    title: 'Tools & Platforms',
+    skills: ['JIRA', 'MS Project', 'Azure DevOps', 'Rally', 'ServiceNow', 'Atlassian Suite', 'Miro', 'Power BI', 'Tableau'],
+  },
+];
+
+const experience = [
+  {
+    role: 'Technical Program & Release Manager',
+    company: 'Financial Services & Technology sector',
+    period: '20+ yrs',
+    bullets: [
+      'Led information-security governance initiatives (PCI DSS, SOC 2) — a track record that carries direct weight as AI systems move into regulated environments.',
+    ],
+  },
+  {
+    role: 'Applied AI/ML — in progress',
+    company: "MS Data Science (UTEC / MIT Professional Education) & MBA (Universidad ORT Uruguay)",
+    period: 'Current',
+    bullets: [
+      'Delivered an AI-based credit-scoring platform.',
+      'Built a RAG/LLM compliance-automation assistant.',
+      'MS thesis: AutoGluon ensemble pipeline reaching R² 0.998 across 393K industrial time-series observations.',
+    ],
+  },
+];
+
+const projects = [
+  {
+    domain: 'Context Engineering',
+    title: 'ObsidianKnowledgeCurator',
+    description:
+      'Autonomous knowledge-lifecycle agent for Obsidian vaults — technical-density grading, offline graph indexing, zero token overhead.',
+    tags: ['Python', 'Antigravity SDK', 'Gemini', 'Graphify'],
+    repoUrl: 'https://github.com/c-ibarra/ObsidianKnowledgeCurator',
+    writeupUrl: '/docs/context-engineering',
+  },
+  {
+    domain: 'Agentic Systems',
+    title: 'RoleSherpa',
+    description:
+      'AI-native job-search copilot built as agent skills — isolated drafter/reviewer pass, anti-fabrication verification before any document reaches the user.',
+    tags: ['Python', 'Hexagonal', 'TDD', 'Claude Agent SDK'],
+    repoUrl: 'https://github.com/c-ibarra/rolesherpa-portfolio',
+    writeupUrl: '/docs/agentic-systems',
+  },
+  {
+    domain: 'LLM Infrastructure',
+    title: 'AIProviderRouter',
+    description:
+      'Hexagonal FastAPI router between LLM providers (Claude Agent SDK vs. Antigravity CLI) behind one OpenAI-compatible endpoint. An ADR for every non-obvious decision.',
+    tags: ['Python', 'FastAPI', 'Hexagonal', 'ADRs'],
+    repoUrl: 'https://github.com/c-ibarra/AIProviderRouter',
+    writeupUrl: '/docs/llm-infrastructure',
+  },
+  {
+    domain: 'Applied AI — Financial Services',
+    title: 'AI-Based Credit-Scoring Platform',
+    description: 'Credit-scoring platform built on applied ML, delivered in a regulated financial-services context.',
+    tags: ['Machine Learning', 'Credit Risk'],
+    private: true,
+  },
+  {
+    domain: 'Applied AI — Governance',
+    title: 'RAG/LLM Compliance-Automation Assistant',
+    description: 'Retrieval-augmented assistant automating compliance workflows, grounded in the same governance discipline as the rest of this profile.',
+    tags: ['RAG', 'LLM', 'Compliance'],
+    private: true,
+  },
+];
+
 export default function HomePage() {
   return (
-    <div className="flex flex-col items-center justify-center text-center flex-1 gap-4 px-4">
-      <h1 className="text-3xl font-bold">Carlos Ibarra</h1>
-      <p className="text-fd-muted-foreground">Data Science & AI Engineer</p>
-      <Link href="/docs" className="font-medium underline">
-        View the case studies
-      </Link>
-      <div className="flex gap-4 text-sm text-fd-muted-foreground">
-        <a
-          href="https://github.com/c-ibarra"
-          target="_blank"
-          rel="noreferrer"
-          className="underline"
-        >
-          GitHub
-        </a>
-        <a
-          href="https://www.linkedin.com/in/carlosibarra"
-          target="_blank"
-          rel="noreferrer"
-          className="underline"
-        >
-          LinkedIn
-        </a>
+    <div className="flex flex-col flex-1">
+      <div className="mx-auto w-full max-w-[1100px] px-4 md:px-8">
+        {/* Hero */}
+        <section className="flex flex-col items-center gap-4 py-16 text-center md:py-24">
+          <span className="rounded-full border border-fd-border px-3 py-1 text-xs font-medium tracking-wide text-fd-muted-foreground uppercase">
+            Data Science & AI Engineer
+          </span>
+          <h1 className="text-4xl font-bold md:text-5xl">Carlos Ibarra</h1>
+          <p className="max-w-2xl text-fd-muted-foreground">{bio}</p>
+          <div className="mt-2 flex flex-wrap justify-center gap-3">
+            <a
+              href="#projects"
+              className="rounded-md bg-fd-primary px-5 py-2.5 text-sm font-medium text-fd-primary-foreground"
+            >
+              View projects
+            </a>
+            <a
+              href="#contact"
+              className="rounded-md border border-fd-border px-5 py-2.5 text-sm font-medium"
+            >
+              Get in touch
+            </a>
+          </div>
+        </section>
+
+        {/* Stats */}
+        <section aria-label="Key figures" className="pb-16">
+          <div
+            className="grid rounded-lg border border-fd-border"
+            style={{ gridTemplateColumns: `repeat(${stats.length}, minmax(0, 1fr))` }}
+          >
+            {stats.map((stat, i) => (
+              <div key={stat.label} className={`p-6 ${i > 0 ? 'border-fd-border md:border-l' : ''}`}>
+                <div className="font-mono text-2xl font-bold">{stat.value}</div>
+                <div className="mt-1 text-sm text-fd-muted-foreground">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* About */}
+        <section id="about" className="scroll-mt-20 border-t border-fd-border py-14">
+          <h2 className="mb-6 text-xs font-semibold tracking-widest text-fd-muted-foreground uppercase">01 · About</h2>
+          <div className="flex flex-col gap-8 md:flex-row">
+            <p className="flex-[2] text-fd-muted-foreground">{bio}</p>
+            <ul className="flex-1 space-y-2 text-sm">
+              {quickFacts.map((fact) => (
+                <li key={fact.label}>
+                  <span className="text-fd-muted-foreground">{fact.label} — </span>
+                  {fact.value}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        {/* Skills */}
+        <section id="skills" className="scroll-mt-20 border-t border-fd-border py-14">
+          <h2 className="mb-6 text-xs font-semibold tracking-widest text-fd-muted-foreground uppercase">02 · Skills</h2>
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {skillGroups.map((group) => (
+              <div key={group.title}>
+                <div className="mb-3 text-sm font-semibold">{group.title}</div>
+                <div className="flex flex-wrap gap-2">
+                  {group.skills.map((skill) => (
+                    <span key={skill} className="rounded-full border border-fd-border px-2.5 py-1 text-xs">
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Experience */}
+        <section id="experience" className="scroll-mt-20 border-t border-fd-border py-14">
+          <h2 className="mb-6 text-xs font-semibold tracking-widest text-fd-muted-foreground uppercase">03 · Experience</h2>
+          {experience.map((role, i) => (
+            <div
+              key={role.role}
+              className={`flex flex-col gap-4 py-6 md:flex-row ${i > 0 ? 'border-t border-fd-border' : ''}`}
+            >
+              <div className="flex-1">
+                <div className="font-semibold">{role.role}</div>
+                <div className="mt-1 text-sm text-fd-muted-foreground">
+                  {role.company} · {role.period}
+                </div>
+              </div>
+              <ul className="flex-[2] space-y-1.5 text-sm text-fd-muted-foreground">
+                {role.bullets.map((bullet) => (
+                  <li key={bullet} className="pl-4 relative">
+                    <span className="absolute left-0">—</span>
+                    {bullet}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </section>
+
+        {/* Projects */}
+        <section id="projects" className="scroll-mt-20 border-t border-fd-border py-14">
+          <h2 className="mb-6 text-xs font-semibold tracking-widest text-fd-muted-foreground uppercase">04 · Projects</h2>
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {projects.map((project) => (
+              <div key={project.title} className="rounded-lg border border-fd-border p-5">
+                <div className="text-xs font-medium tracking-wide text-fd-muted-foreground uppercase">
+                  {project.domain}
+                  {project.private ? ' · Private' : ''}
+                </div>
+                <div className="mt-2 font-semibold">{project.title}</div>
+                <p className="mt-2 text-sm text-fd-muted-foreground">{project.description}</p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {project.tags.map((tag) => (
+                    <span key={tag} className="rounded-full border border-fd-border px-2 py-0.5 text-xs">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                {project.repoUrl && project.writeupUrl && (
+                  <div className="mt-4 flex gap-3 text-sm">
+                    <a href={project.repoUrl} target="_blank" rel="noreferrer" className="underline">
+                      Repo
+                    </a>
+                    <span className="text-fd-muted-foreground">·</span>
+                    <Link href={project.writeupUrl} className="underline">
+                      Write-up
+                    </Link>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Contact */}
+        <section id="contact" className="scroll-mt-20 border-t border-fd-border py-16">
+          <h2 className="mb-6 text-xs font-semibold tracking-widest text-fd-muted-foreground uppercase">05 · Contact</h2>
+          <h3 className="text-2xl font-bold">Let&apos;s talk</h3>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <a
+              href="https://github.com/c-ibarra"
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-md bg-fd-primary px-5 py-2.5 text-sm font-medium text-fd-primary-foreground"
+            >
+              GitHub
+            </a>
+            <a
+              href="https://www.linkedin.com/in/carlosibarra"
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-md border border-fd-border px-5 py-2.5 text-sm font-medium"
+            >
+              LinkedIn
+            </a>
+          </div>
+        </section>
+
+        <footer className="border-t border-fd-border py-8 text-sm text-fd-muted-foreground">
+          © {new Date().getFullYear()} Carlos Ibarra.
+        </footer>
       </div>
     </div>
   );

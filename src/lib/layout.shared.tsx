@@ -4,9 +4,15 @@ import { appName, gitConfig } from './shared';
 export function baseOptions(): BaseLayoutProps {
   return {
     nav: {
-      // JSX supported
       title: appName,
     },
     githubUrl: `https://github.com/${gitConfig.user}/${gitConfig.repo}`,
+    links: [
+      { text: 'About', url: '/#about' },
+      { text: 'Skills', url: '/#skills' },
+      { text: 'Experience', url: '/#experience' },
+      { text: 'Projects', url: '/#projects' },
+      { text: 'Contact', url: '/#contact' },
+    ],
   };
 }
