@@ -1,6 +1,24 @@
 ---
 title: "The Isolated Reviewer Pass: why critique can't share context with the drafter"
-description: Placeholder article — deep dive pending.
+description: Why RoleSherpa's reviewer agent never reads the drafter's own reasoning — only its output.
 ---
 
-> Placeholder — to be written.
+Part of the [Agentic Systems](/docs/agentic-systems) case study.
+
+## The failure mode this prevents
+
+The easy way to build a "review" step into an agentic pipeline is to hand the same conversation — drafter's reasoning included — to a second call and ask it to critique the result. It's cheap to build and it produces plausible-looking output. It also tends to agree with itself: a model that can see *why* the drafter made a choice is primed to accept that reasoning rather than independently evaluate the result against the actual requirement.
+
+That failure mode is easy to miss in a demo, because the reviewer still produces *some* commentary — it's just commentary that rarely catches the kind of mistake the drafter itself would have caught.
+
+## The isolation, specifically
+
+RoleSherpa's reviewer runs as a **separate agent dispatch**: it receives the drafted CV/cover-letter output and the job posting, but not the drafter's intermediate reasoning, tool calls, or context window. It researches the target company independently and critiques the artifact cold — the way an actual second opinion would.
+
+## Verification is a separate, later gate
+
+The isolated reviewer pass is not the same thing as the anti-fabrication verification step described in the [Agentic Systems](/docs/agentic-systems) overview — the two are deliberately separate gates. The reviewer pass is a *qualitative* critique (does this read well, is it well-targeted to the company). The verification step that follows is a *mechanical* check (page count, real text-layer extraction, keyword coverage, and a claim-by-claim diff against the stored profile). A document has to pass both, independently, before it's shown to the user.
+
+## Why this is worth the extra dispatch
+
+Running an isolated reviewer costs an additional agent call per application — RoleSherpa spends that cost deliberately, because the alternative (a reviewer that shares the drafter's context) produces a false sense of having been checked, which is worse than not reviewing at all.

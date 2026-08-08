@@ -1,6 +1,26 @@
 ---
 title: "Hexagonal Architecture, Three Ways: comparing the same pattern across three projects"
-description: Placeholder article — deep dive pending.
+description: Where ports-and-adapters actually earned its keep across three different projects — and where a different separation of concerns was the better fit.
 ---
 
-> Placeholder — to be written.
+Part of the [Engineering Discipline](/docs/engineering-discipline) case study.
+
+## The test for whether hexagonal architecture is earning its keep
+
+Ports-and-adapters is easy to over-apply: wrap a single implementation behind an interface "for flexibility" and the abstraction has no reason to exist yet. It earns its keep specifically when there are — or will predictably be — multiple adapters that don't share an implementation shape, and keeping them swappable has a real cost if skipped.
+
+## AIProviderRouter: two adapters that share nothing
+
+The clearest case among the three anchor projects. `ProviderPort` sits between the FastAPI layer and two provider integrations that are structurally nothing alike: Claude via the official `claude-agent-sdk` (in-process, native async, real multi-turn session resume) versus Antigravity via the `agy` CLI (subprocess, headless `-p` mode, stateless-only because the CLI has no documented conversation-ID capture). Without the port, that asymmetry would leak straight into the HTTP layer. With it, the FastAPI routes don't know or care which adapter answered a given request.
+
+## RoleSherpa: the seam is between judgment and determinism, not between vendors
+
+RoleSherpa's hexagonal core isn't primarily about swapping vendors — its `JobSourcePort` does have three real adapters (LinkedIn, Freehire, Computrabajo), but the more load-bearing seam in the architecture is the one between the AI-reasoning layer (`SKILL.md` prose — fit evaluation, drafting, interview coaching) and the deterministic layer (`src/rolesherpa/` — portal search, PDF render/verify, chronology audits). The deterministic layer is hexagonal internally (a `StoragePort` keeps JSON/CSV swappable for a database later, without that being a decision that needs making now) — but the architecturally important boundary is that judgment-requiring work never gets delegated to "tested Python doing math," and mechanical work never gets delegated to a model asked to be careful.
+
+## ObsidianKnowledgeCurator: a different pattern for a different problem
+
+ObsidianKnowledgeCurator doesn't use ports-and-adapters — and that's the right call, not a gap. Its separation-of-concerns problem isn't "swap an implementation," it's "constrain what an autonomous agent is allowed to touch." The four-zone architecture (`raw/` append-only, `wiki/` read-write, `dev/` collaborative-with-approval, `dswok/` read-only) solves that with permission boundaries rather than an interface boundary. Reaching for a `VaultPort` abstraction here would add indirection without adding any swappable implementation behind it — there's nothing to swap; there's something to constrain.
+
+## What this comparison is actually showing
+
+The pattern worth noticing isn't "this project uses hexagonal architecture" repeated three times — it's that the same underlying judgment (find the seam that actually varies, and put the boundary there) produced three different concrete architectures, including one that deliberately didn't reach for ports-and-adapters at all.

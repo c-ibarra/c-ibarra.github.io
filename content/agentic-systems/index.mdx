@@ -3,8 +3,56 @@ title: Agentic Systems & Multi-Agent Orchestration
 description: "Case study: RoleSherpa — an AI-native job-search copilot built as agent skills."
 ---
 
-> Placeholder — case study content pending. Anchor project: [RoleSherpa](https://github.com/c-ibarra/rolesherpa-portfolio).
+Anchor project: [RoleSherpa](https://github.com/c-ibarra/rolesherpa-portfolio) — a job-search copilot that runs natively inside Claude Code, Google Antigravity, and OpenAI Codex CLI as a set of Agent Skills, with no separate app, API bill, or dashboard.
 
-## What this domain covers
+## The problem
 
-Designing skills for coding agents, isolating a drafter/reviewer pass so critique is never contaminated by the drafter's own reasoning, and verifying generated output (anti-fabrication checks) before it ever reaches the user.
+Job searching is repetitive in a way that's easy to underestimate: re-reading the same posting several times to decide if it's worth applying to, tailoring a CV without silently inventing experience, remembering which recruiter you already talked to, prepping for an interview from scratch every time. A generic AI chat session can help with any one step in isolation — but it forgets everything between sessions, has no memory of real work history, and nothing stops it from writing a plausible-sounding bullet point that isn't true.
+
+RoleSherpa's answer is a structured, repeatable, **anti-fabrication-first** workflow, built as real, tested software rather than a pile of one-off prompts.
+
+## Fit evaluation before anything gets drafted
+
+Every posting is scored against the candidate's stored profile first — technical skills, experience match, behavioral fit — and presented as a table before any document is drafted. Nothing gets written until that evaluation is shown and the user explicitly says to proceed. This also means a posting can be triaged in seconds without committing to a full application.
+
+## An isolated reviewer, not the same model agreeing with itself
+
+The reviewer that critiques a draft and researches the target company runs as a **separate agent dispatch that never reads the drafter's own reasoning** — only its output. That isolation is the whole point: a reviewer that shares context with the drafter tends to rubber-stamp it, because it inherits the same framing. A reviewer that only sees the final artifact gives an honest second opinion.
+
+## Verification before presentation, not after
+
+Every generated CV or cover letter is rendered to PDF and checked — exact page count, real text-layer extraction (not just "did it render"), required-keyword coverage, and a claim-by-claim anti-fabrication diff against the stored profile — before it's ever shown to the user. If a document fails a check, the failure is surfaced, not silently retried into something that merely passes.
+
+## Real connectors, real limits documented
+
+Three portal connectors — LinkedIn, Freehire, and Computrabajo Uruguay — are implemented directly against each site's actual HTML/APIs, not proxied through a third-party scraping service. Portals that structurally can't be automated (robots.txt rules, active bot-detection) are explicitly documented as unsupported in `config/sources.yaml`, rather than silently skipped.
+
+## Two layers, deliberately kept from blurring
+
+RoleSherpa splits cleanly into an AI-reasoning layer and a deterministic layer:
+
+- **`*/skills/*/SKILL.md`** — judgment-requiring steps (fit evaluation, drafting, interview coaching) as prose the AI host executes directly
+- **`src/rolesherpa/`** — deterministic, hexagonal (ports & adapters) Python: portal search, PDF render/verify, deduplication, chronology auditing — tested, and never asked to "carefully do the math" via a model
+
+TDD applies to both layers — including `tests/skills/`, which assert on the actual `SKILL.md` prose itself (for example, that a skill's declared `allowed-tools` frontmatter really grants what its instructions require).
+
+<Callout type="warn" title="A real incident, not a hypothetical">
+  Candidate profile data used to live partly inside the tracked, mirrored skill directories — until that coupling caused a real, working-session PII leak (contact info committed as a side effect of an unrelated skill edit). The fix is now an enforced rule: personal data lives only in gitignored `data/`, never inside the skill tree, with dedicated test coverage (`tests/skills/test_profile_data_outside_skills_tree.py`) so it can't regress silently.
+</Callout>
+
+## When an earlier finding turned out to be half right
+
+`PROJECT_BRIEF.md` originally assumed a single `.agents/skills/` location would load natively across all three AI hosts. A live bug report proved that assumption two-thirds right: Claude Code only reads `.claude/skills/`. The fix — mirroring every skill byte-for-byte into both trees, with a test that fails the suite the moment they drift — is documented in `docs/adr/0003`.
+
+A follow-up investigation then checked whether the frontmatter mechanisms the skills actually depend on (`allowed-tools`, `context: fork`) are equally portable across hosts. They aren't — both are Claude-Code-specific, verified directly against the open Agent Skills spec rather than assumed. That narrowing of the original claim is `docs/adr/0004`.
+
+## Stack
+
+Python 3.14 / `uv` · Claude Code, Google Antigravity, OpenAI Codex CLI (Agent Skills format) · `httpx` + `selectolax` · WeasyPrint + `pypdf` · `pytest` (TDD, red-green-refactor)
+
+## Read more
+
+<Cards>
+  <Card title="The Isolated Reviewer Pass" href="/docs/agentic-systems/articles/isolated-reviewer-pass" />
+  <Card title="Repository" href="https://github.com/c-ibarra/rolesherpa-portfolio" external />
+</Cards>

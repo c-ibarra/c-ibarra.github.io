@@ -1,6 +1,32 @@
 ---
 title: "Technical Density Grading: filtering sources before they enter the vault"
-description: Placeholder article — deep dive pending.
+description: How ObsidianKnowledgeCurator scores content before ingestion, and why the gate matters more than the grader itself.
 ---
 
-> Placeholder — to be written.
+Part of the [Context Engineering](/docs/context-engineering) case study.
+
+## The failure mode this prevents
+
+A knowledge-compiling agent that ingests everything it's pointed at degrades in a specific, insidious way: the concept graph fills with restatements of things already known, marketing-adjacent "explainer" content, and threads with no real citations behind them. Search and cross-linking still technically work — they just increasingly surface noise. By the time that's obvious, the vault has thousands of low-signal notes woven into the graph, and there's no clean way to unwind them.
+
+The fix isn't a better retrieval ranking — it's not letting the noise in.
+
+## What gets scored, and how
+
+Before any source (a web article, a YouTube video, a podcast, a book chapter) is written anywhere, a 3,000-character preview is evaluated across three dimensions:
+
+1. **Information density** — how much of the text is signal vs. filler
+2. **Provenance & references** — whether claims are backed by citations, data, or a verifiable author
+3. **Technical level** — whether the content describes concrete architecture and implementation, or stays at an explainer level
+
+The composite score is compared against `MIN_TECHNICAL_SCORE`, an `.env`-configured threshold (default `60`).
+
+## The override, not the block
+
+A hard block would be the simpler design — and the wrong one. Some legitimately useful sources score low on this rubric (a primary-source announcement with little prose around it, for instance). So a below-threshold score doesn't silently discard the source: it halts ingestion and surfaces the full scorecard for an explicit human decision — proceed anyway, or skip.
+
+That distinction — gate with override, not silent filter and not hard block — is what keeps the grader from becoming something the person maintaining the vault has to work around.
+
+## Where this sits in the pipeline
+
+The grader runs before the `GraphifyMapper` pre-calculates any graph context and before anything is written to `raw/`. Rejecting early means the zero-cost graph indexer (see the [Context Engineering](/docs/context-engineering) overview) never has to process — or later prune — content that shouldn't have been indexed in the first place.

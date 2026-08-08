@@ -3,8 +3,39 @@ title: Engineering Discipline for AI Systems
 description: "Cross-cutting: TDD, hexagonal architecture, and ADRs across three real projects."
 ---
 
-> Placeholder — content pending. Draws evidence from all three anchor projects: [ObsidianKnowledgeCurator](https://github.com/c-ibarra/ObsidianKnowledgeCurator), [RoleSherpa](https://github.com/c-ibarra/rolesherpa-portfolio), [AIProviderRouter](https://github.com/c-ibarra/AIProviderRouter).
+One pattern crosses all three anchor projects — [ObsidianKnowledgeCurator](/docs/context-engineering), [RoleSherpa](/docs/agentic-systems), and [AIProviderRouter](/docs/llm-infrastructure) — and it's as much a differentiator as any of the projects individually: test-driven development, hexagonal (ports & adapters) architecture, and decisions recorded as ADRs, applied consistently rather than bolted on to look thorough.
 
-## What this domain covers
+## Documentation as an engineering artifact, not an afterthought
 
-How the same engineering discipline — test-driven development, hexagonal (ports & adapters) architecture, and decisions recorded as ADRs — was applied consistently across three different problem domains.
+All three projects treat Architecture Decision Records as load-bearing, not decorative:
+
+- **AIProviderRouter** rejected a community integration path *before* writing code against it, because the tool's own README admitted it violated a vendor's Terms of Service — a decision only possible because primary-source research (vendor CLI behavior, SDK source, GitHub issues) happened before the choice, not after. See [Rejected by ADR](/docs/llm-infrastructure/articles/rejected-by-adr).
+- **RoleSherpa** went a step further: one ADR (`0004`) revisits and narrows the claim made by an earlier one (`0003`), after a follow-up investigation found the original "skills load natively everywhere" assumption was only two-thirds right. Documenting that a prior finding needed correcting, rather than quietly fixing it and moving on, is rarer than documenting a decision that turned out to be right the first time.
+- **ObsidianKnowledgeCurator** treats its `dev/` zone — where ADRs and project files live — as *collaborative*, not autonomous: the agent can propose changes there, but every one requires explicit human approval, unlike the `wiki/` zone it maintains independently.
+
+## Hexagonal architecture, applied to different shapes of problem
+
+Ports-and-adapters shows up in both RoleSherpa and AIProviderRouter, but solving different problems:
+
+- **AIProviderRouter**'s `ProviderPort` unifies two integrations that don't share an implementation shape at all — an official async SDK on one side, a CLI subprocess on the other — behind one interface consumed by the FastAPI layer.
+- **RoleSherpa**'s hexagonal core separates judgment (drafting, fit evaluation — AI-reasoning prose) from determinism (portal search, PDF rendering, chronology audits — tested Python) so neither leaks into the other, and the deterministic layer is never asked to "carefully do the math" via a model.
+
+Neither project reaches for the pattern reflexively — see the [Hexagonal, Three Ways](/docs/engineering-discipline/articles/hexagonal-three-ways) deep dive for where each project actually needed the seam and where it deliberately didn't add one.
+
+## TDD, including where it's uncomfortable to apply
+
+AIProviderRouter shipped 35 tests, written test-first. RoleSherpa applies the same red-green-refactor discipline to its deterministic Python core — and then extends it to the *prose* layer: `tests/skills/` contains tests that assert on the actual `SKILL.md` files, for example checking that a skill's declared `allowed-tools` frontmatter really grants what its own instructions require, or that two mirrored skill trees haven't silently drifted apart.
+
+## Honesty about real incidents, not just clean-room decisions
+
+RoleSherpa's `data/` isolation rule didn't originate as a best practice applied proactively — it exists because personal candidate data once lived partly inside the tracked, mirrored skill directories, and that coupling caused a real PII leak (contact info committed as a side effect of an unrelated skill edit) during a working session. The fix became an enforced project rule with dedicated test coverage, not a one-off patch. Treating that as something to document rather than quietly clean up is the same instinct behind ADR `0004` revising ADR `0003`.
+
+## The throughline
+
+None of these three projects is large. What makes the discipline visible is that it's consistent across genuinely different problem domains — a knowledge-graph agent, a job-search copilot, an infrastructure router — rather than a pattern applied once for a portfolio and abandoned elsewhere.
+
+## Read more
+
+<Cards>
+  <Card title="Hexagonal Architecture, Three Ways" href="/docs/engineering-discipline/articles/hexagonal-three-ways" />
+</Cards>

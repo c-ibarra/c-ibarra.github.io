@@ -3,8 +3,58 @@ title: Context Engineering & Knowledge Systems
 description: "Case study: ObsidianKnowledgeCurator — an autonomous knowledge-lifecycle agent for Obsidian vaults."
 ---
 
-> Placeholder — case study content pending. Anchor project: [ObsidianKnowledgeCurator](https://github.com/c-ibarra/ObsidianKnowledgeCurator).
+Anchor project: [ObsidianKnowledgeCurator](https://github.com/c-ibarra/ObsidianKnowledgeCurator) — an autonomous, agentic knowledge compiler built on the Google Antigravity SDK and Gemini 3.1 Pro, maintaining a 13,000+ note Obsidian vault as a "Second Brain."
 
-## What this domain covers
+## The problem
 
-Context and knowledge management for AI agents: technical-density grading of ingested sources, zero-token-overhead offline graph indexing, and decoupled skill/data architecture — as opposed to naive RAG over raw documents.
+Knowledge workers consume a constant stream of technical content — papers, docs, videos, podcasts. Traditional PKM tools rely on manual synthesis; chat-with-PDF style LLM tools don't compound knowledge over time, because they have no persistent state and no cross-document reasoning. And naive LLM-based graph compilation — asking a model to extract relationships from thousands of documents — gets expensive and slow fast.
+
+The project treats this as the "LLM Wiki Paradigm" (after Andrej Karpathy's framing of LLMs as knowledge compilers, not search engines): instead of answering questions over raw documents, the agent actively maintains a structured, versioned knowledge base — reading raw input, grading it, extracting concepts, updating existing pages, and flagging contradictions.
+
+## Gating quality before it ever reaches the vault
+
+Every source — a YouTube video, a web article, a podcast, a book chapter — is graded before ingestion. A 3,000-character preview is scored across three dimensions:
+
+- **Information density** — factual saturation, absence of filler
+- **Provenance & references** — citations, data points, verifiable authorship
+- **Technical level** — concrete implementation detail vs. surface-level explainer
+
+If the composite score falls below a configurable threshold (`MIN_TECHNICAL_SCORE`, default `60`), ingestion halts and the score breakdown is shown for an explicit human override — rather than silently ingesting low-signal content into the graph.
+
+## Zero-cost, zero-latency structural indexing
+
+The architectural bet that most differentiates this project from a typical RAG pipeline: **the graph is built without calling an LLM at all.**
+
+A local Python AST and wikilink parser (`graphify_mapper.py`) extracts headings, parent-child nesting, and `[[wikilinks]]` directly from the Markdown files, matching new content against existing concepts via a hybrid local context engine — **under 50ms, $0.00 token cost**. It only falls back to a lightweight LLM query when local match confidence drops below 70%.
+
+<Callout type="info" title="Lesson learned">
+  AST-based indexing over LLM-based graph extraction saved 95%+ in query latency and 100% in graph indexing cost — confirmed after running both approaches against the same vault.
+</Callout>
+
+## The Zone architecture
+
+The vault is partitioned into four zones, each with different agent write permissions:
+
+| Zone | Purpose | Agent permissions |
+|---|---|---|
+| `raw/` | Immutable sources (transcripts, clippings) | Append-only |
+| `wiki/` | Synthesized concepts and entities | Read-write |
+| `dev/` | Architecture Decision Records, project files | Collaborative — requires explicit human approval |
+| `dswok/` | Protected external personal knowledge base | Read-only, indexed but never modified |
+
+This separation is what lets the agent operate autonomously in `wiki/` while treating `raw/` as a permanent, unedited historical record — and it's why the agent can index a protected external knowledge base without any risk of writing to it.
+
+## Decoupling behavior from knowledge
+
+The system splits the agent's *rules* from its *compiled knowledge*: `SKILL.md` holds pure execution rules (wikilink mandates, non-hallucination constraints), while `KNOWLEDGE.md` is an automatically regenerated static index of 500+ concept cards. Keeping these separate avoids system-prompt inflation while still giving the agent instant access to the full compiled graph.
+
+## Stack
+
+Gemini 3.1 Pro · Google Antigravity SDK · Graphify.net (`graphifyy`) · Python 3.12+ / `uv` · Chrome CDP + `yt-dlp` + Buzz CLI (offline Whisper) · Obsidian
+
+## Read more
+
+<Cards>
+  <Card title="Technical Density Grading" href="/docs/context-engineering/articles/technical-density-grading" />
+  <Card title="Repository" href="https://github.com/c-ibarra/ObsidianKnowledgeCurator" external />
+</Cards>

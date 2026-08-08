@@ -3,8 +3,50 @@ title: LLM Infrastructure & Provider Abstraction
 description: "Case study: AIProviderRouter — a hexagonal FastAPI router between LLM providers."
 ---
 
-> Placeholder — case study content pending. Anchor project: [AIProviderRouter](https://github.com/c-ibarra/AIProviderRouter).
+Anchor project: [AIProviderRouter](https://github.com/c-ibarra/AIProviderRouter) — a local, config-driven router that lets a single OpenAI-compatible endpoint talk to either Claude or Google Antigravity, decided by configuration instead of hardcoded into the client.
 
-## What this domain covers
+## What it does
 
-Abstracting LLM providers behind a single interface, hexagonal architecture applied to AI infrastructure, and compliance-by-design decisions (local OAuth sessions, no proxying, no shared credentials).
+Point any OpenAI-compatible tool (the reference use case is [Warp](https://www.warp.dev/)) at one local endpoint; swap providers by editing a YAML file — no restart, no client-side change. `default_provider` in `config/provider.yaml` decides who answers, re-read on every request.
+
+The two provider legs are integrated asymmetrically, on purpose:
+
+- **Claude** — driven in-process via the official `claude-agent-sdk`, with real token-by-token SSE streaming and native multi-turn session resume.
+- **Antigravity** — driven via the official `agy` CLI's headless mode as a subprocess, with automatic retry against a known reliability bug (verified against the vendor's own GitHub issue tracker). Because the CLI has no documented way to capture a conversation ID for multi-turn resume, this leg is stateless-only — one turn per request — until that changes upstream.
+
+## Rejected before it shipped
+
+Antigravity offers two integration paths: an official Python SDK, or the `agy` CLI's headless mode. The SDK's only two authentication mechanisms — verified directly in `google/antigravity/models.py` — require a provisioned Gemini API key or GCP Application Default Credentials. Neither reuses the free consumer OAuth session (`agy login`) this project's compliance principles require.
+
+<Callout type="warn" title="Caught before it shipped">
+  A third option was evaluated: community OAuth-bridging tools that call undocumented internal Antigravity endpoints. That tool's own README states this "violates Google's Terms of Service" and cites user reports of account bans. It was rejected — not after the fact, but during primary-source research, before any code was written against it (`docs/adr/0001`).
+</Callout>
+
+That's the difference between "we didn't get caught" and "we verified the vendor's own terms before choosing an approach" — the kind of decision that's easy to skip under deadline pressure and expensive to unwind once shipped.
+
+## Hexagonal, where it earns its keep
+
+A `ProviderPort` interface sits between the FastAPI HTTP layer and two genuinely different provider integrations — an official SDK on one side, a CLI subprocess on the other. That's the case hexagonal architecture is for: two adapters that don't share an implementation shape, unified behind one interface, not abstraction applied for its own sake (`docs/adr/0002`).
+
+## Deliberately narrow scope
+
+The router is chat-only by design: no file edits, no shell commands. It's a conversational proxy, not a remote-control surface — an explicit scope decision (`docs/adr/0003`), not an oversight.
+
+## Compliance by design
+
+Both providers are driven through the author's own local OAuth sessions — no API keys, no proxying, no shared credentials, no scraping. The router is stateless: every request carries its own full conversation history, so there's no server-side session store to build or lose.
+
+## Discipline as a first-class deliverable
+
+Every non-obvious decision is recorded as an ADR, including the rejected alternative and why. Primary-source research (vendor CLI behavior, SDK source code, GitHub issues — not blog posts) precedes each integration choice, kept in `docs/research/`. 35 tests, written test-first.
+
+## Stack
+
+Python 3.14+ · FastAPI · `claude-agent-sdk` · `agy` CLI (subprocess) · hexagonal architecture (ports & adapters) · `pytest` (TDD)
+
+## Read more
+
+<Cards>
+  <Card title="Rejected by ADR" href="/docs/llm-infrastructure/articles/rejected-by-adr" />
+  <Card title="Repository" href="https://github.com/c-ibarra/AIProviderRouter" external />
+</Cards>

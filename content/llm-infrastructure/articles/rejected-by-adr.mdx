@@ -1,6 +1,32 @@
 ---
 title: "Rejected by ADR: the integration path that violated a vendor's ToS"
-description: Placeholder article — deep dive pending.
+description: How primary-source research caught a Terms-of-Service problem in AIProviderRouter before any code was written against it.
 ---
 
-> Placeholder — to be written.
+Part of the [LLM Infrastructure](/docs/llm-infrastructure) case study.
+
+## The decision point
+
+AIProviderRouter needed to talk to Google Antigravity without a provisioned API key — the project's compliance principle is local OAuth sessions only, no proxying, no shared credentials. Three integration paths existed:
+
+1. The official `antigravity-sdk-python`
+2. The `agy` CLI's headless mode, wrapped as a subprocess
+3. Community OAuth-bridging tools that call undocumented internal Antigravity/Cloud Code endpoints
+
+## Why the SDK was out
+
+Verified directly in `google/antigravity/models.py`: the SDK's only two authentication mechanisms are a provisioned `GeminiAPIEndpoint` key or `VertexEndpoint` GCP Application Default Credentials. Neither reuses the free consumer OAuth session (`agy login`) the project requires — so despite being the "official" path, it didn't fit the actual constraint.
+
+## Why the community bridge was rejected
+
+The third option looked, on the surface, like the most direct route to reusing a consumer OAuth session without shelling out to a CLI. Reading its own documentation instead of assuming it was fine turned up the disqualifying fact: **the tool's own README states that its approach violates Google's Terms of Service**, and cites user reports of account bans as a consequence.
+
+That's a rejection made from a primary source — the tool's own maintainers documenting the risk — not a guess or an overly cautious read of ambiguous terms.
+
+## What got chosen instead, and its real cost
+
+The `agy` CLI's headless `-p`/`--print` mode was the only path that authenticates via the same consumer OAuth session, reused transparently through the OS keyring. It's not a free win: verified against the official `antigravity-cli` repo, it has a documented history of non-TTY stdout bugs (mitigated with a pinned version and retry logic) and no documented way to capture a conversation ID for multi-turn resume — which is why that provider leg is stateless-only, one turn per request, while the Claude leg (via the official SDK) supports native multi-turn resume.
+
+## The takeaway
+
+Choosing the CLI over the SDK reads, superficially, like settling for the less capable option. The ADR makes the actual trade-off legible: it's the only option that's simultaneously ToS-compliant and compatible with the project's no-API-key constraint. The two provider legs ended up asymmetric in capability — not because of an oversight, but because each was integrated via the best officially-supported path actually available.
