@@ -3,7 +3,10 @@ import Link from 'next/link';
 const bio =
   "Program and Release Manager with over 20 years of technical program leadership across financial services and technology environments, now capitalizing that governance and delivery background into applied AI. Currently pursuing a Master's in Data Science (UTEC Universidad Tecnológica / MIT Professional Education) and an MBA (Universidad ORT Uruguay), alongside hands-on delivery of an AI-based credit-scoring platform and a RAG/LLM compliance-automation assistant. Brings a decade-plus track record of information-security governance (PCI DSS, SOC 2) that carries direct weight as AI systems move into regulated environments.";
 
-const quickFacts = [{ label: 'Focus', value: 'Technology Program/Release Management and Governance, transitioning into Applied AI/ML' }];
+const quickFacts = [
+  { label: 'Focus', value: 'Technology Program/Release Management and Governance, transitioning into Applied AI/ML' },
+  { label: 'Main Stack', value: 'Python · FastAPI · Hexagonal Architecture · TDD' },
+];
 
 const stats = [
   { value: '20+ yrs', label: 'Technology program leadership' },
@@ -121,6 +124,7 @@ const projects = [
     description:
       'Autonomous knowledge-lifecycle agent for Obsidian vaults — technical-density grading, offline graph indexing, zero token overhead.',
     tags: ['Python', 'Antigravity SDK', 'Gemini', 'Graphify'],
+    impact: '13,000+ notes indexed',
     repoUrl: 'https://github.com/c-ibarra/ObsidianKnowledgeCurator',
     writeupUrl: '/docs/context-engineering',
   },
@@ -130,6 +134,7 @@ const projects = [
     description:
       'AI-native job-search copilot built as agent skills — isolated drafter/reviewer pass, anti-fabrication verification before any document reaches the user.',
     tags: ['Python', 'Hexagonal', 'TDD', 'Claude Agent SDK'],
+    impact: '3 live portal connectors',
     repoUrl: 'https://github.com/c-ibarra/rolesherpa-portfolio',
     writeupUrl: '/docs/agentic-systems',
   },
@@ -139,6 +144,7 @@ const projects = [
     description:
       'Hexagonal FastAPI router between LLM providers (Claude Agent SDK vs. Antigravity CLI) behind one OpenAI-compatible endpoint. An ADR for every non-obvious decision.',
     tags: ['Python', 'FastAPI', 'Hexagonal', 'ADRs'],
+    impact: '35 tests passing',
     repoUrl: 'https://github.com/c-ibarra/AIProviderRouter',
     writeupUrl: '/docs/llm-infrastructure',
   },
@@ -205,14 +211,14 @@ export default function HomePage() {
           <h2 className="mb-6 text-xs font-semibold tracking-widest text-fd-muted-foreground uppercase">01 · About</h2>
           <div className="flex flex-col gap-8 md:flex-row">
             <p className="flex-[2] text-fd-muted-foreground">{bio}</p>
-            <ul className="flex-1 space-y-2 text-sm">
+            <div className="flex-1 space-y-3">
               {quickFacts.map((fact) => (
-                <li key={fact.label}>
-                  <span className="text-fd-muted-foreground">{fact.label} — </span>
-                  {fact.value}
-                </li>
+                <div key={fact.label} className="rounded-lg border border-fd-border bg-fd-card p-4">
+                  <div className="text-xs text-fd-muted-foreground">{fact.label}</div>
+                  <div className="mt-1 text-sm font-medium">{fact.value}</div>
+                </div>
               ))}
-            </ul>
+            </div>
           </div>
         </section>
 
@@ -273,6 +279,9 @@ export default function HomePage() {
                 </div>
                 <div className="mt-2 font-semibold">{project.title}</div>
                 <p className="mt-2 text-sm text-fd-muted-foreground">{project.description}</p>
+                {project.impact && (
+                  <div className="mt-3 font-mono text-sm font-semibold text-fd-primary">{project.impact}</div>
+                )}
                 <div className="mt-3 flex flex-wrap gap-2">
                   {project.tags.map((tag) => (
                     <span key={tag} className="rounded-full border border-fd-border px-2 py-0.5 text-xs">
