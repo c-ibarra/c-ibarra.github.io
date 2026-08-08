@@ -3,4 +3,22 @@ title: LLM Zoomcamp 2026
 description: Personal solutions and capstone for LLM Zoomcamp 2026 — DataTalksClub.
 ---
 
-> Placeholder — content pending. Repo: [llm-zoomcamp-2026](https://github.com/c-ibarra/llm-zoomcamp-2026).
+Repo: [llm-zoomcamp-2026](https://github.com/c-ibarra/llm-zoomcamp-2026)
+
+End-to-end LLM engineering course by [DataTalksClub](https://github.com/DataTalksClub/llm-zoomcamp/), covering the full stack for production-grade RAG systems and AI agents — from retrieval and embeddings through orchestration, evaluation, and monitoring. Each module is a Jupyter notebook with a concrete homework, building toward a capstone that integrates the full stack.
+
+## Modules
+
+| # | Topic | Key concepts | Status |
+|---|---|---|---|
+| 1 | Agentic RAG | RAG pipeline, `minsearch`, chunking, agentic loop with function calling | Done |
+| 2 | Vector Search | Embeddings, ONNX Runtime, cosine similarity, hybrid search with RRF | Done |
+| 3 | Orchestration | Kestra workflows, context engineering, RAG grounding, token usage observability | Done |
+| 4 | Evaluation | Hit Rate, MRR, ground-truth generation, text/vector/hybrid retrieval comparison | Done |
+| 5 | Monitoring | OpenTelemetry tracing, spans, token/cost attributes, custom SQLite span exporter | Done |
+| — | Workshop: dlt + Logfire | Pydantic AI agent tracing, dlt data pipelines, DuckDB, nested JSON normalization | Done |
+| — | Capstone | Full RAG/agent system — ingestion, eval, UI, monitoring | In progress |
+
+## Stack
+
+OpenAI GPT-4o-mini / GPT-5.4-mini, Google Gemini · ONNX Runtime (`all-MiniLM-L6-v2`) · `minsearch`, ElasticSearch, pgvector · Pydantic AI, LangGraph, CrewAI · Kestra · OpenTelemetry, Pydantic Logfire · dlt, DuckDB · Streamlit, PostgreSQL, Grafana · Docker Compose, `uv`
