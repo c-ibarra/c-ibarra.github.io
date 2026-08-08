@@ -167,10 +167,14 @@ const projects = [
 export default function HomePage() {
   return (
     <div className="flex flex-col flex-1">
-      <div className="mx-auto w-full max-w-[1100px] px-4 md:px-8">
-        {/* Hero */}
-        <section className="flex flex-col items-center gap-4 py-16 text-center md:py-24">
-          <span className="rounded-full border border-fd-border px-3 py-1 text-xs font-medium tracking-wide text-fd-muted-foreground uppercase">
+      {/* Hero */}
+      <section className="relative overflow-hidden">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute left-1/2 top-0 h-[520px] w-[900px] -translate-x-1/2 -translate-y-1/3 rounded-full bg-fd-primary/15 blur-[120px]"
+        />
+        <div className="relative mx-auto flex w-full max-w-[1100px] flex-col items-center gap-4 px-4 py-16 text-center md:px-8 md:py-24">
+          <span className="rounded-full border border-fd-primary/30 px-3 py-1 text-xs font-medium tracking-wide text-fd-primary uppercase">
             Data Science & AI Engineer
           </span>
           <h1 className="text-4xl font-bold md:text-5xl">Carlos Ibarra</h1>
@@ -189,8 +193,10 @@ export default function HomePage() {
               Get in touch
             </a>
           </div>
-        </section>
+        </div>
+      </section>
 
+      <div className="mx-auto w-full max-w-[1100px] px-4 md:px-8">
         {/* Stats */}
         <section aria-label="Key figures" className="pb-16">
           <div
