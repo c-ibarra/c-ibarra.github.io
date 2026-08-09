@@ -38,12 +38,22 @@ function MermaidContent({ chart }: { chart: string }) {
   const { resolvedTheme } = useTheme();
   const { default: mermaid } = use(cachePromise('mermaid', () => import('mermaid')));
 
+  const isDark = resolvedTheme === 'dark';
+
   mermaid.initialize({
     startOnLoad: false,
     securityLevel: 'loose',
     fontFamily: 'inherit',
-    themeCSS: 'margin: 1.5rem auto 0;',
-    theme: resolvedTheme === 'dark' ? 'dark' : 'default',
+    // Mermaid's built-in dark theme edge labels (#ccc on #585858) fail WCAG AA
+    // contrast (4.43:1, needs 4.5:1) — override with a higher-contrast pair.
+    // Each selector needs its own rule block (no comma lists: Mermaid's themeCSS
+    // scoping drops rules with multiple selectors) and !important (Mermaid emits
+    // its own ID-scoped `#<svgId> span { color: #ccc }`, which outranks a plain
+    // class selector on specificity).
+    themeCSS: isDark
+      ? 'margin: 1.5rem auto 0; .edgeLabel p { color: #f1f5f9 !important; } .edgeLabel { color: #f1f5f9 !important; background-color: #1e293b !important; } .labelBkg { background-color: #1e293b !important; }'
+      : 'margin: 1.5rem auto 0;',
+    theme: isDark ? 'dark' : 'default',
   });
 
   const { svg, bindFunctions } = use(

@@ -10,8 +10,11 @@
 }
 
 .dark {
-  --color-fd-primary: hsl(217, 91%, 60%);
-  --color-fd-primary-foreground: hsl(0, 0%, 100%);
+  /* L 60 -> 64 and foreground white -> near-black: L60/white text failed WCAG AA
+     contrast on both uses of this token (chip text 4.34:1, button text 3.63:1,
+     both need 4.5:1). L64 + dark foreground clears both. */
+  --color-fd-primary: hsl(217, 91%, 64%);
+  --color-fd-primary-foreground: hsl(222, 20%, 10%);
   --color-fd-ring: hsl(217, 91%, 60%);
 }
 
