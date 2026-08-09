@@ -175,7 +175,7 @@ export default function HomePage() {
         />
         <div className="relative mx-auto flex w-full max-w-[1100px] flex-col items-center gap-4 px-4 py-16 text-center md:px-8 md:py-24">
           <span className="rounded-full border border-fd-primary/30 px-3 py-1 text-xs font-medium tracking-wide text-fd-primary uppercase">
-            Data Science & AI Engineer
+            AI Engineer · 20 Years in Technical Program Leadership
           </span>
           <h1 className="text-4xl font-bold md:text-5xl">Carlos Ibarra</h1>
           <p className="max-w-2xl text-fd-muted-foreground">{bio}</p>
@@ -315,6 +315,7 @@ export default function HomePage() {
         <section id="contact" className="scroll-mt-20 border-t border-fd-border py-16">
           <h2 className="mb-6 text-xs font-semibold tracking-widest text-fd-muted-foreground uppercase">05 · Contact</h2>
           <h3 className="text-2xl font-bold">Let&apos;s talk</h3>
+          <p className="mt-2 text-fd-muted-foreground">The fastest way to reach me is LinkedIn.</p>
           <div className="mt-6 flex flex-wrap gap-3">
             <a
               href="https://github.com/c-ibarra"
