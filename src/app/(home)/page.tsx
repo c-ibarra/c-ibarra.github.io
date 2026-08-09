@@ -287,6 +287,15 @@ export default function HomePage() {
         {/* Projects */}
         <section id="projects" className="scroll-mt-20 border-t border-fd-border py-14">
           <h2 className="mb-6 text-xs font-semibold tracking-widest text-fd-muted-foreground uppercase">04 · Projects</h2>
+          <p className="mb-8 max-w-2xl text-sm text-fd-muted-foreground">
+            Three projects, one system: Context Engineering decides what the model sees, Agentic
+            Systems decides how much autonomy it gets, LLM Infrastructure decides where it runs —
+            held together by the same{' '}
+            <Link href="/docs/engineering-discipline" className="underline">
+              Engineering Discipline
+            </Link>{' '}
+            across all three.
+          </p>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {ossProjects.map((project) => (
               <div key={project.title} className="rounded-lg border border-fd-border p-5">
