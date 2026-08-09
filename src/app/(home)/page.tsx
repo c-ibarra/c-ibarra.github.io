@@ -127,7 +127,7 @@ const experience = [
   },
 ];
 
-const projects = [
+const ossProjects = [
   {
     domain: 'Context Engineering',
     title: 'ObsidianKnowledgeCurator',
@@ -158,19 +158,20 @@ const projects = [
     repoUrl: 'https://github.com/c-ibarra/AIProviderRouter',
     writeupUrl: '/docs/llm-infrastructure',
   },
+];
+
+const privateProjects = [
   {
     domain: 'Applied AI — Financial Services',
     title: 'AI-Based Credit-Scoring Platform',
     description: 'Credit-scoring platform built on applied ML, delivered in a regulated financial-services context.',
     tags: ['Machine Learning', 'Credit Risk'],
-    private: true,
   },
   {
     domain: 'Applied AI — Governance',
     title: 'RAG/LLM Compliance-Automation Assistant',
     description: 'Retrieval-augmented assistant automating compliance workflows, grounded in the same governance discipline as the rest of this profile.',
     tags: ['RAG', 'LLM', 'Compliance'],
-    private: true,
   },
 ];
 
@@ -287,17 +288,12 @@ export default function HomePage() {
         <section id="projects" className="scroll-mt-20 border-t border-fd-border py-14">
           <h2 className="mb-6 text-xs font-semibold tracking-widest text-fd-muted-foreground uppercase">04 · Projects</h2>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {projects.map((project) => (
+            {ossProjects.map((project) => (
               <div key={project.title} className="rounded-lg border border-fd-border p-5">
-                <div className="text-xs font-medium tracking-wide text-fd-muted-foreground uppercase">
-                  {project.domain}
-                  {project.private ? ' · Private' : ''}
-                </div>
+                <div className="text-xs font-medium tracking-wide text-fd-muted-foreground uppercase">{project.domain}</div>
                 <div className="mt-2 font-semibold">{project.title}</div>
                 <p className="mt-2 text-sm text-fd-muted-foreground">{project.description}</p>
-                {project.impact && (
-                  <div className="mt-3 font-mono text-sm font-semibold text-fd-primary">{project.impact}</div>
-                )}
+                <div className="mt-3 font-mono text-sm font-semibold text-fd-primary">{project.impact}</div>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {project.tags.map((tag) => (
                     <span key={tag} className="rounded-full border border-fd-border px-2 py-0.5 text-xs">
@@ -305,20 +301,49 @@ export default function HomePage() {
                     </span>
                   ))}
                 </div>
-                {project.repoUrl && project.writeupUrl && (
-                  <div className="mt-4 flex gap-3 text-sm">
-                    <a href={project.repoUrl} target="_blank" rel="noreferrer" className="underline">
-                      Repo
-                    </a>
-                    <span className="text-fd-muted-foreground">·</span>
-                    <Link href={project.writeupUrl} className="underline">
-                      Write-up
-                    </Link>
-                  </div>
-                )}
+                <div className="mt-4 flex gap-3 text-sm">
+                  <a href={project.repoUrl} target="_blank" rel="noreferrer" className="underline">
+                    Repo
+                  </a>
+                  <span className="text-fd-muted-foreground">·</span>
+                  <Link href={project.writeupUrl} className="underline">
+                    Write-up
+                  </Link>
+                </div>
               </div>
             ))}
           </div>
+
+          <h3 className="mt-12 mb-1 text-xs font-semibold tracking-widest text-fd-muted-foreground uppercase">
+            Additional Experience — Private / Employer Work
+          </h3>
+          <p className="mb-6 text-sm text-fd-muted-foreground">
+            No public repo — described here, not independently verifiable like the projects above.
+          </p>
+          <div className="grid gap-5 sm:grid-cols-2">
+            {privateProjects.map((project) => (
+              <div key={project.title} className="rounded-lg border border-dashed border-fd-border p-5">
+                <div className="text-xs font-medium tracking-wide text-fd-muted-foreground uppercase">{project.domain}</div>
+                <div className="mt-2 font-semibold">{project.title}</div>
+                <p className="mt-2 text-sm text-fd-muted-foreground">{project.description}</p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {project.tags.map((tag) => (
+                    <span key={tag} className="rounded-full border border-fd-border px-2 py-0.5 text-xs">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <p className="mt-8 text-sm text-fd-muted-foreground">
+            Also completing coursework in LLM engineering and AutoML —{' '}
+            <Link href="/docs/learning-log" className="underline">
+              see Learning Log
+            </Link>
+            .
+          </p>
         </section>
 
         {/* Contact */}
