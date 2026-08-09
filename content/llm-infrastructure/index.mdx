@@ -9,6 +9,19 @@ Anchor project: [AIProviderRouter](https://github.com/c-ibarra/AIProviderRouter)
 
 Point any OpenAI-compatible tool (the reference use case is [Warp](https://www.warp.dev/)) at one local endpoint; swap providers by editing a YAML file — no restart, no client-side change. `default_provider` in `config/provider.yaml` decides who answers, re-read on every request.
 
+<Mermaid chart={`
+flowchart LR
+    Warp["Warp (custom endpoint)"] -->|"POST /v1/chat/completions OpenAI-compatible"| Router["Provider Router (FastAPI, 127.0.0.1 only)"]
+    Router --> Port["ProviderPort (interface)"]
+    Port --> Claude["ClaudeAdapter: claude-agent-sdk"]
+    Port --> Antigravity["AntigravityAdapter: agy CLI subprocess"]
+    Claude -.->|"local OAuth (claude login)"| ClaudeSvc[("Claude Code")]
+    Antigravity -.->|"local OAuth (agy login)"| AntigravitySvc[("Antigravity")]
+    Config["config/provider.yaml (re-read every request)"] -.-> Router
+`} />
+
+*Source: [AIProviderRouter README](https://github.com/c-ibarra/AIProviderRouter#what-it-does).*
+
 The two provider legs are integrated asymmetrically, on purpose:
 
 - **Claude** — driven in-process via the official `claude-agent-sdk`, with real token-by-token SSE streaming and native multi-turn session resume.

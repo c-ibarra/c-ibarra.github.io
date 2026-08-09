@@ -29,6 +29,31 @@ Three portal connectors — LinkedIn, Freehire, and Computrabajo Uruguay — are
 
 ## Two layers, deliberately kept from blurring
 
+<Mermaid chart={`
+flowchart TB
+    User(["Person, inside Claude Code / Antigravity / Codex CLI"])
+    subgraph Skills["AI-reasoning layer — .agents/skills/*/SKILL.md"]
+        direction LR
+        Setup["setup / reset"]
+        Scrape["scrape / rank"]
+        Apply["apply (drafter + isolated reviewer)"]
+        Interview["interview / outcome / upskill / audit"]
+    end
+    subgraph Lib["Deterministic layer — src/rolesherpa/ (hexagonal, TDD)"]
+        direction LR
+        Connectors["connectors: LinkedIn / Freehire / Computrabajo"]
+        Documents["documents: render + verify (WeasyPrint, pypdf)"]
+        Domain["domain: dedup, chronology, models"]
+        Storage["storage: JSON / CSV"]
+    end
+    User -->|"/rolesherpa-*"| Skills
+    Skills -->|"python -m rolesherpa.cli ..."| Lib
+    Lib --> Storage
+    Storage -->|"data/ (gitignored)"| User
+`} />
+
+*Source: [RoleSherpa README](https://github.com/c-ibarra/rolesherpa-portfolio#architecture-overview).*
+
 RoleSherpa splits cleanly into an AI-reasoning layer and a deterministic layer:
 
 - **`*/skills/*/SKILL.md`** — judgment-requiring steps (fit evaluation, drafting, interview coaching) as prose the AI host executes directly
