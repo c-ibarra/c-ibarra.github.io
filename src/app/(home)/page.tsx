@@ -1,7 +1,17 @@
 import Link from 'next/link';
 
-const bio =
-  "Program and Release Manager with over 20 years of technical program leadership across financial services and technology environments, now capitalizing that governance and delivery background into applied AI. Currently pursuing a Master's in Data Science (UTEC Universidad Tecnológica / MIT Professional Education) and an MBA (Universidad ORT Uruguay), alongside hands-on delivery of an AI-based credit-scoring platform and a RAG/LLM compliance-automation assistant. Brings a decade-plus track record of information-security governance (PCI DSS, SOC 2) that carries direct weight as AI systems move into regulated environments.";
+const bio = (
+  <>
+    Applied AI/ML work — an <strong>AI-based credit-scoring platform</strong> and a{' '}
+    <strong>RAG/LLM compliance-automation assistant</strong> — built alongside a Master&apos;s in
+    Data Science (UTEC Universidad Tecnológica / MIT Professional Education) and an MBA
+    (Universidad ORT Uruguay). Backed by 20+ years as a Program and Release Manager across
+    financial services and technology, now capitalizing that governance and delivery
+    background into AI. Brings a decade-plus track record of{' '}
+    <strong>information-security governance (PCI DSS, SOC 2)</strong> that carries direct
+    weight as AI systems move into regulated environments.
+  </>
+);
 
 const quickFacts = [
   { label: 'Focus', value: 'Technology Program/Release Management and Governance, transitioning into Applied AI/ML' },
