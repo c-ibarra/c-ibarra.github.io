@@ -7,9 +7,9 @@ const bio = (
     Data Science (UTEC Universidad Tecnológica / MIT Professional Education) and an MBA
     (Universidad ORT Uruguay). Backed by 20+ years as a Program and Release Manager across
     financial services and technology, now capitalizing that governance and delivery
-    background into AI. Brings a decade-plus track record of{' '}
-    <strong>information-security governance (PCI DSS, SOC 2)</strong> that carries direct
-    weight as AI systems move into regulated environments.
+    background into AI. Brings experience working within{' '}
+    <strong>PCI DSS, SOC 2, and IAM frameworks</strong> across a fintech career that carries
+    direct weight as AI systems move into regulated environments.
   </>
 );
 
@@ -112,7 +112,7 @@ const experience = [
     company: 'Financial Services & Technology sector',
     period: '20+ yrs',
     bullets: [
-      'Led information-security governance initiatives (PCI DSS, SOC 2) — a track record that carries direct weight as AI systems move into regulated environments.',
+      'Worked within PCI DSS, SOC 2, and IAM frameworks across a fintech career — a track record that carries direct weight as AI systems move into regulated environments.',
     ],
   },
   {
