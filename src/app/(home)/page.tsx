@@ -132,11 +132,21 @@ const ossProjects = [
     domain: 'Context Engineering',
     title: 'ObsidianKnowledgeCurator',
     description:
-      'Autonomous knowledge-lifecycle agent for Obsidian vaults — technical-density grading, zero token overhead. Its offline indexer now has a production successor: graphify-daemon, a RAM-resident graph served to AI agents over MCP.',
-    tags: ['Python', 'Antigravity SDK', 'Gemini', 'Graphify', 'MCP'],
+      'Autonomous knowledge-lifecycle agent for Obsidian vaults — technical-density grading, offline graph indexing, zero token overhead.',
+    tags: ['Python', 'Antigravity SDK', 'Gemini', 'Graphify'],
     impact: '13,000+ notes indexed',
     repoUrl: 'https://github.com/c-ibarra/ObsidianKnowledgeCurator',
     writeupUrl: '/docs/context-engineering',
+  },
+  {
+    domain: 'Context Engineering',
+    title: 'graphify-daemon',
+    description:
+      "ObsidianKnowledgeCurator's offline graph indexer, turned into a production service — RAM-resident, copy-on-write snapshots, served to concurrent AI agents over MCP.",
+    tags: ['Python', 'MCP', 'Concurrency'],
+    impact: '6 production bugs, root-caused',
+    repoUrl: 'https://github.com/c-ibarra/graphify-daemon',
+    writeupUrl: '/docs/context-engineering/articles/graphify-daemon',
   },
   {
     domain: 'Agentic Systems',
@@ -288,15 +298,17 @@ export default function HomePage() {
         <section id="projects" className="scroll-mt-20 border-t border-fd-border py-14">
           <h2 className="mb-6 text-xs font-semibold tracking-widest text-fd-muted-foreground uppercase">04 · Projects</h2>
           <p className="mb-8 max-w-2xl text-sm text-fd-muted-foreground">
-            Three projects, one system: Context Engineering decides what the model sees, Agentic
+            Three domains, one system: Context Engineering decides what the model sees, Agentic
             Systems decides how much autonomy it gets, LLM Infrastructure decides where it runs —
             held together by the same{' '}
             <Link href="/docs/engineering-discipline" className="underline">
               Engineering Discipline
             </Link>{' '}
-            across all three.
+            across all three. <span className="font-medium text-fd-foreground">graphify-daemon</span>{' '}
+            is Context Engineering&apos;s production layer: the same knowledge graph, running as a
+            service instead of a batch script.
           </p>
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-5 sm:grid-cols-2">
             {ossProjects.map((project) => (
               <div key={project.title} className="rounded-lg border border-fd-border p-5">
                 <div className="text-xs font-medium tracking-wide text-fd-muted-foreground uppercase">{project.domain}</div>
