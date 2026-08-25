@@ -1,17 +1,18 @@
 ---
 title: Engineering Discipline for AI Systems
-description: "Cross-cutting: TDD, hexagonal architecture, and ADRs across three real projects."
+description: "Cross-cutting: TDD, hexagonal architecture, and ADRs across the anchor projects."
 ---
 
-One pattern crosses all three anchor projects — [ObsidianKnowledgeCurator](/docs/context-engineering), [RoleSherpa](/docs/agentic-systems), and [AIProviderRouter](/docs/llm-infrastructure) — and it's as much a differentiator as any of the projects individually: test-driven development, hexagonal (ports & adapters) architecture, and decisions recorded as ADRs, applied consistently rather than bolted on to look thorough.
+One pattern crosses the anchor projects — [ObsidianKnowledgeCurator](/docs/context-engineering), [RoleSherpa](/docs/agentic-systems), and [AIProviderRouter](/docs/llm-infrastructure) — and it's as much a differentiator as any of the projects individually: test-driven development, hexagonal (ports & adapters) architecture, and decisions recorded as ADRs, applied consistently rather than bolted on to look thorough.
 
 ## Documentation as an engineering artifact, not an afterthought
 
-All three projects treat Architecture Decision Records as load-bearing, not decorative:
+All of these projects treat Architecture Decision Records as load-bearing, not decorative:
 
 - **AIProviderRouter** rejected a community integration path *before* writing code against it, because the tool's own README admitted it violated a vendor's Terms of Service — a decision only possible because primary-source research (vendor CLI behavior, SDK source, GitHub issues) happened before the choice, not after. See [Rejected by ADR](/docs/llm-infrastructure/articles/rejected-by-adr).
 - **RoleSherpa** went a step further: one ADR (`0004`) revisits and narrows the claim made by an earlier one (`0003`), after a follow-up investigation found the original "skills load natively everywhere" assumption was only two-thirds right. Documenting that a prior finding needed correcting, rather than quietly fixing it and moving on, is rarer than documenting a decision that turned out to be right the first time.
 - **ObsidianKnowledgeCurator** treats its `dev/` zone — where ADRs and project files live — as *collaborative*, not autonomous: the agent can propose changes there, but every one requires explicit human approval, unlike the `wiki/` zone it maintains independently.
+- **graphify-daemon** carries the ADR half of this discipline furthest of any anchor project: 6 ADRs, each recording the alternative that was rejected and why — including one rejecting `fork()` on a specific, verifiable OS-level correctness ground (POSIX `fork()` from a multi-threaded process is a documented deadlock hazard), not a style preference. See [graphify-daemon](/docs/context-engineering/articles/graphify-daemon).
 
 ## Hexagonal architecture, applied to different shapes of problem
 
@@ -32,7 +33,7 @@ RoleSherpa's `data/` isolation rule didn't originate as a best practice applied 
 
 ## The throughline
 
-None of these three projects is large. What makes the discipline visible is that it's consistent across genuinely different problem domains — a knowledge-graph agent, a job-search copilot, an infrastructure router — rather than a pattern applied once for a portfolio and abandoned elsewhere.
+None of these projects is large. What makes the discipline visible is that it's consistent across genuinely different problem domains — a knowledge-graph agent, the production daemon serving it, a job-search copilot, an infrastructure router — rather than a pattern applied once for a portfolio and abandoned elsewhere.
 
 ## Read more
 
