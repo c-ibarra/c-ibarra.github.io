@@ -172,6 +172,16 @@ const ossProjects = [
     repoUrl: 'https://github.com/c-ibarra/AIProviderRouter',
     writeupUrl: '/docs/llm-infrastructure',
   },
+  {
+    domain: 'LLM Infrastructure',
+    title: 'MLOps Docs Agent',
+    description:
+      'RAG agent grounding answers in real MLflow/Feast documentation — hybrid search, reranking, and the system prompt itself all evaluated rather than assumed.',
+    tags: ['pydantic-ai', 'Qdrant', 'Kestra', 'OpenTelemetry'],
+    impact: '240 eval questions, LLM-judge scored',
+    repoUrl: 'https://github.com/c-ibarra/llm-zoomcamp-2026-capstone',
+    writeupUrl: '/docs/llm-infrastructure/articles/mlops-docs-agent',
+  },
 ];
 
 const privateProjects = [
@@ -310,9 +320,12 @@ export default function HomePage() {
             </Link>{' '}
             across all three. <span className="font-medium text-fd-foreground">graphify-daemon</span>{' '}
             is Context Engineering&apos;s production layer: the same knowledge graph, running as a
-            service instead of a batch script.
+            service instead of a batch script — and{' '}
+            <span className="font-medium text-fd-foreground">MLOps Docs Agent</span> is LLM
+            Infrastructure&apos;s other half: not routing between providers, but grounding what they
+            answer in real, evaluated retrieval.
           </p>
-          <div className="grid gap-5 sm:grid-cols-2">
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {ossProjects.map((project) => (
               <div key={project.title} className="rounded-lg border border-fd-border p-5">
                 <div className="text-xs font-medium tracking-wide text-fd-muted-foreground uppercase">{project.domain}</div>

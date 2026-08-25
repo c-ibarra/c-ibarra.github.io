@@ -57,9 +57,14 @@ Every non-obvious decision is recorded as an ADR, including the rejected alterna
 
 Python 3.14+ · FastAPI · `claude-agent-sdk` · `agy` CLI (subprocess) · hexagonal architecture (ports & adapters) · `pytest` (TDD)
 
+## MLOps Docs Agent: evaluated retrieval
+
+Where AIProviderRouter is about routing between providers, [MLOps Docs Agent](https://github.com/c-ibarra/llm-zoomcamp-2026-capstone) is about the other half of LLM infrastructure: grounding an agent's answers in real, current documentation instead of the model's own training data — with retrieval, reranking, and the prompt itself all evaluated rather than assumed. Hybrid search beat text-only and vector-only on both of its two doc sources; query rewriting was tried, evaluated, and shipped disabled because it measurably hurt retrieval.
+
 ## Read more
 
 <Cards>
   <Card title="Rejected by ADR" href="/docs/llm-infrastructure/articles/rejected-by-adr" />
   <Card title="Repository" href="https://github.com/c-ibarra/AIProviderRouter" external />
+  <Card title="MLOps Docs Agent: evaluated retrieval" href="/docs/llm-infrastructure/articles/mlops-docs-agent" />
 </Cards>

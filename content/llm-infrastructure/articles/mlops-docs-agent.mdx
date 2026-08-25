@@ -1,0 +1,83 @@
+---
+title: "MLOps Docs Agent: an agent grounded in real docs, and the evidence it works"
+description: "Case study: a RAG agent for MLflow and Feast documentation — evaluated retrieval, evaluated prompts, and a real reproducibility bug found and fixed."
+---
+
+Part of the [LLM Infrastructure](/docs/llm-infrastructure) case study. [Repository](https://github.com/c-ibarra/llm-zoomcamp-2026-capstone) — built as the capstone for [LLM Zoomcamp 2026](https://github.com/DataTalksClub/llm-zoomcamp) by DataTalksClub.
+
+## The problem
+
+Engineers using MLflow or Feast often ask a general-purpose chat assistant about them. Two failure modes follow: the assistant hallucinates plausible-but-wrong API details, or its training data is stale relative to the current docs. This agent grounds every answer in the current MLflow/Feast documentation, retrieved live from each project's own repository — not from the model's memory.
+
+## Architecture
+
+<Mermaid chart={`
+flowchart TB
+    GH["GitHub: mlflow/mlflow, feast-dev/feast"] -->|"dlt (incremental by file SHA)"| DDB["DuckDB<br/>raw docs + section-aware chunks"]
+    DDB -->|"orchestrated by Kestra"| EMB["FastEmbed<br/>dense (all-MiniLM-L6-v2) + sparse (BM25)"]
+    EMB --> QD["Qdrant<br/>2 collections: mlflow_docs, feast_docs"]
+    QD -->|"hybrid search (native RRF) + cross-encoder rerank"| AGENT["pydantic-ai Agent (gpt-5.4-mini)<br/>tools: search_mlflow_docs, search_feast_docs"]
+    AGENT -->|"OpenTelemetry spans"| PG[("Postgres<br/>traces + feedback")]
+    AGENT -.->|"OpenInference-enriched"| PHX[("Arize Phoenix<br/>bonus trace UI")]
+    PG --> ST["Streamlit<br/>Chat + Monitoring tabs"]
+    PHX -.-> ST
+`} />
+
+*Source: [MLOps Docs Agent README](https://github.com/c-ibarra/llm-zoomcamp-2026-capstone#architecture).*
+
+Each chunk gets both a dense embedding (meaning/paraphrase) and a sparse BM25 vector (exact term matches), stored on the same Qdrant point — a query can never accidentally surface results from the wrong source, since MLflow and Feast each get their own collection.
+
+## Retrieval evaluation: hybrid search, measured
+
+240 ground-truth questions (3 per sampled chunk, 40 chunks per source), scored on hit-rate and MRR:
+
+| Source | text | vector | hybrid |
+|---|---|---|---|
+| MLflow | 0.758 / 0.535 | 0.608 / 0.437 | **0.792 / 0.597** |
+| Feast | 0.767 / 0.541 | 0.717 / 0.523 | **0.800 / 0.653** |
+
+Hybrid won on both sources, so it's what ships. The reranking/query-rewriting ablation is more interesting than a clean win:
+
+| Config | MLflow mrr | Feast mrr |
+|---|---|---|
+| baseline | 0.623 | 0.617 |
+| + rerank | **0.661** | 0.579 |
+| + rewrite | 0.437 | 0.548 |
+| + rerank + rewrite | 0.488 | 0.523 |
+
+<Callout type="warn" title="A negative result, kept instead of hidden">
+  Query rewriting made retrieval *worse* on both sources, every time it was tried. The rewrite prompt is generic across both products, so it tends to inject the wrong product's terminology into a query (Feast questions picking up "MLflow" language) — diluting both the sparse term-weight signal and the dense embedding centroid, plus adding ~1.3s of latency per call. It's implemented and evaluated, but shipped **off by default** — the evaluation is the reason, not a guess.
+</Callout>
+
+## Prompt evaluation: LLM-as-judge
+
+Two system-prompt variants, run against the same 20 questions (10 per source), scored 1–5 by an LLM judge:
+
+| Variant | Average score | Won / tied |
+|---|---|---|
+| `concise` | 3.75 | 5/20 |
+| **`explicit_citation`** | **4.4** | **15/20** |
+
+`explicit_citation` won decisively and shipped as the default — it also happens to satisfy the project's source-attribution requirement, so the evaluation reinforced a design choice rather than just rubber-stamping it.
+
+## Caught by testing reproducibility, not by a user
+
+<Callout type="info" title="Found before it shipped">
+  A clean clone was run through the full documented setup in an isolated Docker environment to verify reproducibility — and it caught a real bug: `dlt`'s default DuckDB destination path resolved against the *first-ever* working directory a same-named pipeline had run from, cached outside the repo in `~/.dlt/pipelines/`. A second checkout on the same machine would have silently written into the first checkout's database. Fixed by pinning both the destination path and `pipelines_dir` to the repo root.
+</Callout>
+
+The same instinct behind graphify-daemon's queue-deadlock writeup: run the thing for real, under conditions that expose what a passing test suite won't, and document what broke.
+
+## Groundedness, checked with a regression set
+
+A custom LLM-as-judge groundedness evaluator plus a 15-question behavioral regression set, run as an Arize Phoenix Dataset + Experiment rather than a local script — so results land in Phoenix's own Datasets & Experiments UI and future prompt changes have something to compare against. Confirmed live: 15/15 refusal-behavior checks passed; 6/9 in-domain answers scored fully grounded (the judge is strict about exact wording, not just topical correctness) — the baseline future runs are measured against.
+
+## Stack
+
+Python 3.13 · `pydantic-ai` (gpt-5.4-mini) · Qdrant (hybrid RRF + FastEmbed dense/sparse/reranker) · `dlt` (incremental ingestion) · Kestra (orchestration) · OpenTelemetry → Postgres + Arize Phoenix (dual export) · Streamlit · Docker Compose
+
+## Read more
+
+<Cards>
+  <Card title="Repository" href="https://github.com/c-ibarra/llm-zoomcamp-2026-capstone" external />
+</Cards>
