@@ -71,9 +71,22 @@ Measured against a deterministic synthetic graph (21,000 nodes, seed 42) — any
   Token reduction (measured against the real 21,123-node production graph) is ~8,700x — a deliberate worst-case upper bound, not a realistic session budget. "Naive" means re-reading the *entire* vault for every single question; no actual workflow does that. See the [full caveat](https://github.com/c-ibarra/graphify-daemon#token-reduction) in the README.
 </Callout>
 
+## Live
+
+A real `graph_stats` call against the daemon actually running this vault, captured while writing this page:
+
+```
+mcp: graphify-daemon.graph_stats()  →
+Nodes: 21123
+Edges: 21973
+EXTRACTED: 100%  INFERRED: 0%  AMBIGUOUS: 0%
+```
+
+A `query_graph` transcript would be more illustrative — but its response includes real source file paths from the author's personal vault, which the daemon's own confidentiality design (owner-only artifacts, no path leaks in logs) exists to protect. Publishing one here would undercut that design rather than demonstrate it, so this page shows only the aggregate figures the [Performance](#benchmarks) section above already makes public.
+
 ## Stack
 
-Python 3.12 · `mcp` (Streamable HTTP) · Starlette + uvicorn · watchdog · SQLite (WAL) · `graphifyy` (confined behind one adapter module) · `jsonschema` · ruff + mypy --strict · 249 tests, CI-gated
+Python 3.12 · `mcp` (Streamable HTTP) · Starlette + uvicorn · watchdog · SQLite (WAL) · [`graphifyy`](https://github.com/Graphify-Labs/graphify) (third-party, not authored by this project — confined behind one adapter module) · `jsonschema` · ruff + mypy --strict · 249 tests, CI-gated
 
 ## Read more
 
