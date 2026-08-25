@@ -132,8 +132,8 @@ const ossProjects = [
     domain: 'Context Engineering',
     title: 'ObsidianKnowledgeCurator',
     description:
-      'Autonomous knowledge-lifecycle agent for Obsidian vaults — technical-density grading, offline graph indexing, zero token overhead.',
-    tags: ['Python', 'Antigravity SDK', 'Gemini', 'Graphify'],
+      'Autonomous knowledge-lifecycle agent for Obsidian vaults — technical-density grading, zero token overhead. Its offline indexer now has a production successor: graphify-daemon, a RAM-resident graph served to AI agents over MCP.',
+    tags: ['Python', 'Antigravity SDK', 'Gemini', 'Graphify', 'MCP'],
     impact: '13,000+ notes indexed',
     repoUrl: 'https://github.com/c-ibarra/ObsidianKnowledgeCurator',
     writeupUrl: '/docs/context-engineering',

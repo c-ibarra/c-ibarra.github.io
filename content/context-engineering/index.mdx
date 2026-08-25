@@ -73,9 +73,14 @@ The system splits the agent's *rules* from its *compiled knowledge*: `SKILL.md` 
 
 Gemini 3.1 Pro · Google Antigravity SDK · Graphify.net (`graphifyy`) · Python 3.12+ / `uv` · Chrome CDP + `yt-dlp` + Buzz CLI (offline Whisper) · Obsidian
 
+## graphify-daemon: the production successor
+
+The offline `Graphify Indexer` step above is a batch script — it runs, writes `graph.json`, and exits. [`graphify-daemon`](https://github.com/c-ibarra/graphify-daemon) takes the same graph and turns it into a long-running service: the graph stays resident in RAM, publishes new snapshots via copy-on-write on every debounced vault change, and answers queries from concurrent AI agents over MCP — with a documented, root-caused production incident (a `multiprocessing.Queue` deadlock in the clustering subprocess) among six real bugs fixed along the way.
+
 ## Read more
 
 <Cards>
   <Card title="Technical Density Grading" href="/docs/context-engineering/articles/technical-density-grading" />
+  <Card title="graphify-daemon: production successor" href="/docs/context-engineering/articles/graphify-daemon" />
   <Card title="Repository" href="https://github.com/c-ibarra/ObsidianKnowledgeCurator" external />
 </Cards>

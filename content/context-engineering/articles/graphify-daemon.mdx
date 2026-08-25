@@ -1,0 +1,83 @@
+---
+title: "graphify-daemon: from offline indexer to a production MCP daemon"
+description: "Case study: graphify-daemon — a RAM-resident knowledge graph served to concurrent AI agents over MCP, and the incidents that shaped its concurrency model."
+---
+
+Part of the [Context Engineering](/docs/context-engineering) case study — the production successor to ObsidianKnowledgeCurator's offline graph indexer. [Repository](https://github.com/c-ibarra/graphify-daemon).
+
+## The problem
+
+Agents working against a large vault were burning 15k–60k tokens a session just re-reading files to rebuild context they already had. The prior pipeline — a per-file watcher script — made every part of that worse:
+
+| | Legacy pipeline | graphify-daemon |
+|---|---|---|
+| Rebuild unit | per changed file | per debounced batch |
+| Cost of a 50-file batch | ~75s (one full rebuild per file) | one rebuild, total |
+| Cache reload | 26 MB reloaded from disk on every file | resident in RAM, incremental |
+| Community ID stability | 88.63% churn between runs | &lt;5% churn (tested), via stable remapping |
+| Concurrent read safety | none for its SQLite index | lock-free reads against immutable snapshots |
+
+## Architecture
+
+<Mermaid chart={`
+flowchart TB
+    V(["Obsidian vault"])
+    AI(["AI agents (Claude Code, etc.)"])
+
+    V -->|"file change"| W["watchdog<br/>(per-file events)"]
+    W -->|"debounce / batch"| C["compile batch"]
+    C -->|"publish<br/>(COW, atomic)"| S["snapshot (RAM)<br/>graph + trigram index +<br/>community map"]
+    S -->|"read-only,<br/>lock-free"| M["7 MCP tools<br/>query_graph, get_node,<br/>get_neighbors, ..."]
+    AI -->|"MCP / Streamable HTTP"| M
+
+    C -->|"slow cadence<br/>(60s idle OR 25 changes,<br/>whichever first)"| L["Leiden clustering<br/>(isolated subprocess)"]
+`} />
+
+*Source: [graphify-daemon README](https://github.com/c-ibarra/graphify-daemon#what-it-does).*
+
+Every read comes straight from an immutable, versioned snapshot: a writer builds a new one off to the side and swaps a single reference, so concurrent queries never take a lock even while the next snapshot is being built underneath them.
+
+## Caught in production
+
+<Callout type="warn" title="Caught in production">
+  The clustering subprocess used to call `process.join()` before draining its result queue — a community-map result larger than the OS pipe buffer (~64KB, exceeded past ~8,000 nodes) left the child blocked writing to a full pipe while the parent blocked in `join()`, never reading it. At the timeout mark the child was confirmed still alive, holding an already-correct result the parent discarded. Fix: drain the queue before joining it, not after.
+</Callout>
+
+That's one of six real, root-caused production bugs — the [full list](https://github.com/c-ibarra/graphify-daemon#production-bugs-found--fixed) also covers an unbounded graceful-shutdown hang, a cross-thread SQLite bug that silently stalled the graph since startup, a stateful-MCP-session bug that broke a real client connection, a misleading truncation-reporting bug, and a vault-path leak through extractor errors.
+
+## Design decisions worth reading
+
+- **Clustering runs in its own subprocess, via `spawn`.** `fork()` from a multi-threaded async server is a known deadlock hazard; shared memory would mean inventing a binary format for a nested `nx.Graph` for an operation that runs once a minute. Both were considered and rejected.
+- **A duplicated auth header is rejected outright, not resolved to a value.** `X-API-Key` or `Authorization` sent twice is treated as absent — even if one of the two values is correct — rather than silently picking one.
+- **MCP tool errors return a fixed generic message, never the real exception text.** An allowlist by construction, not a blocklist that has to catch everything that could leak (a file path, node content, an internal function name).
+
+Six ADRs in total, each recording the alternative that was rejected — see [`docs/adr/`](https://github.com/c-ibarra/graphify-daemon/tree/main/docs/adr) in the repository.
+
+## Benchmarks
+
+Measured against a deterministic synthetic graph (21,000 nodes, seed 42) — anyone cloning the repo reproduces the same figures.
+
+| Tool | p50 | p95 | p99 |
+|---|---|---|---|
+| `query_graph` | 106.36 ms | 111.07 ms | 158.02 ms |
+| `get_node` | 2.67 ms | 32.27 ms | 35.57 ms |
+| `get_neighbors` | 93.14 ms | 99.55 ms | 141.28 ms |
+| `get_community` | 0.05 ms | 0.05 ms | 0.09 ms |
+| `god_nodes` | 7.49 ms | 9.47 ms | 14.05 ms |
+| `graph_stats` | 12.33 ms | 13.24 ms | 15.96 ms |
+| `shortest_path` | 282.16 ms | 321.41 ms | 359.61 ms |
+
+<Callout type="info" title="Read the number with its caveat">
+  Token reduction (measured against the real 21,123-node production graph) is ~8,700x — a deliberate worst-case upper bound, not a realistic session budget. "Naive" means re-reading the *entire* vault for every single question; no actual workflow does that. See the [full caveat](https://github.com/c-ibarra/graphify-daemon#token-reduction) in the README.
+</Callout>
+
+## Stack
+
+Python 3.12 · `mcp` (Streamable HTTP) · Starlette + uvicorn · watchdog · SQLite (WAL) · `graphifyy` (confined behind one adapter module) · `jsonschema` · ruff + mypy --strict · 249 tests, CI-gated
+
+## Read more
+
+<Cards>
+  <Card title="Repository" href="https://github.com/c-ibarra/graphify-daemon" external />
+  <Card title="Production bugs found & fixed" href="https://github.com/c-ibarra/graphify-daemon#production-bugs-found--fixed" external />
+</Cards>
