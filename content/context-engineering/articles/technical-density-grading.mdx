@@ -3,7 +3,7 @@ title: "Technical Density Grading: filtering sources before they enter the vault
 description: How ObsidianKnowledgeCurator scores content before ingestion, and why the gate matters more than the grader itself.
 ---
 
-Part of the [Context Engineering](/docs/context-engineering) case study.
+Part of the [Giving AI agents the right context](/docs/context-engineering) case study.
 
 ## The failure mode this prevents
 
@@ -29,4 +29,4 @@ That distinction — gate with override, not silent filter and not hard block �
 
 ## Where this sits in the pipeline
 
-The grader runs before the `GraphifyMapper` pre-calculates any graph context and before anything is written to `raw/`. Rejecting early means the zero-cost graph indexer (see the [Context Engineering](/docs/context-engineering) overview) never has to process — or later prune — content that shouldn't have been indexed in the first place.
+The grader runs before the `GraphifyMapper` pre-calculates any graph context and before anything is written to `raw/`. Rejecting early means the zero-cost graph indexer (see the [Giving AI agents the right context](/docs/context-engineering) overview) never has to process — or later prune — content that shouldn't have been indexed in the first place.

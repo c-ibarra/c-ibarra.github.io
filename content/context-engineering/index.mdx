@@ -1,6 +1,6 @@
 ---
-title: Context Engineering & Knowledge Systems
-description: "Case study: ObsidianKnowledgeCurator — an autonomous knowledge-lifecycle agent for Obsidian vaults."
+title: Giving AI agents the right context
+description: "Case study (context engineering): ObsidianKnowledgeCurator — an autonomous knowledge-lifecycle agent for Obsidian vaults."
 ---
 
 Anchor project: [ObsidianKnowledgeCurator](https://github.com/c-ibarra/ObsidianKnowledgeCurator) — an autonomous, agentic knowledge compiler built on the Google Antigravity SDK and Gemini 3.1 Pro, maintaining a 13,000+ note Obsidian vault as a "Second Brain."
@@ -75,7 +75,7 @@ Gemini 3.1 Pro · Google Antigravity SDK · Graphify.net (`graphifyy`) · Python
 
 ## graphify-daemon: the production successor
 
-The offline `Graphify Indexer` step above is a batch script — it runs, writes `graph.json`, and exits. [`graphify-daemon`](https://github.com/c-ibarra/graphify-daemon) takes the same graph and turns it into a long-running service: the graph stays resident in RAM, publishes new snapshots via copy-on-write on every debounced vault change, and answers queries from concurrent AI agents over MCP — with a documented, root-caused production incident (a `multiprocessing.Queue` deadlock in the clustering subprocess) among six real bugs fixed along the way.
+The offline `Graphify Indexer` step above is a batch script — it runs, writes `graph.json`, and exits. [`graphify-daemon`](https://github.com/c-ibarra/graphify-daemon-portfolio) takes the same graph and turns it into a long-running service: the graph stays resident in RAM, publishes new snapshots via copy-on-write on every debounced vault change, and answers queries from concurrent AI agents over MCP — with a documented, root-caused production incident (a `multiprocessing.Queue` deadlock in the clustering subprocess) among six real bugs fixed along the way.
 
 ## Read more
 

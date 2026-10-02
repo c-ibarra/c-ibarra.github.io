@@ -3,7 +3,7 @@ title: "graphify-daemon: from offline indexer to a production MCP daemon"
 description: "Case study: graphify-daemon — a RAM-resident knowledge graph served to concurrent AI agents over MCP, and the incidents that shaped its concurrency model."
 ---
 
-Part of the [Context Engineering](/docs/context-engineering) case study — the production successor to ObsidianKnowledgeCurator's offline graph indexer. [Repository](https://github.com/c-ibarra/graphify-daemon).
+Part of the [Giving AI agents the right context](/docs/context-engineering) case study — the production successor to ObsidianKnowledgeCurator's offline graph indexer. [Repository](https://github.com/c-ibarra/graphify-daemon-portfolio).
 
 ## The problem
 
@@ -33,7 +33,7 @@ flowchart TB
     C -->|"slow cadence<br/>(60s idle OR 25 changes,<br/>whichever first)"| L["Leiden clustering<br/>(isolated subprocess)"]
 `} />
 
-*Source: [graphify-daemon README](https://github.com/c-ibarra/graphify-daemon#what-it-does).*
+*Source: [graphify-daemon README](https://github.com/c-ibarra/graphify-daemon-portfolio#what-it-does).*
 
 Every read comes straight from an immutable, versioned snapshot: a writer builds a new one off to the side and swaps a single reference, so concurrent queries never take a lock even while the next snapshot is being built underneath them.
 
@@ -43,7 +43,7 @@ Every read comes straight from an immutable, versioned snapshot: a writer builds
   The clustering subprocess used to call `process.join()` before draining its result queue — a community-map result larger than the OS pipe buffer (~64KB, exceeded past ~8,000 nodes) left the child blocked writing to a full pipe while the parent blocked in `join()`, never reading it. At the timeout mark the child was confirmed still alive, holding an already-correct result the parent discarded. Fix: drain the queue before joining it, not after.
 </Callout>
 
-That's one of six real, root-caused production bugs — the [full list](https://github.com/c-ibarra/graphify-daemon#production-bugs-found--fixed) also covers an unbounded graceful-shutdown hang, a cross-thread SQLite bug that silently stalled the graph since startup, a stateful-MCP-session bug that broke a real client connection, a misleading truncation-reporting bug, and a vault-path leak through extractor errors.
+That's one of six real, root-caused production bugs — the [full list](https://github.com/c-ibarra/graphify-daemon-portfolio#production-bugs-found--fixed) also covers an unbounded graceful-shutdown hang, a cross-thread SQLite bug that silently stalled the graph since startup, a stateful-MCP-session bug that broke a real client connection, a misleading truncation-reporting bug, and a vault-path leak through extractor errors.
 
 ## Design decisions worth reading
 
@@ -51,7 +51,7 @@ That's one of six real, root-caused production bugs — the [full list](https://
 - **A duplicated auth header is rejected outright, not resolved to a value.** `X-API-Key` or `Authorization` sent twice is treated as absent — even if one of the two values is correct — rather than silently picking one.
 - **MCP tool errors return a fixed generic message, never the real exception text.** An allowlist by construction, not a blocklist that has to catch everything that could leak (a file path, node content, an internal function name).
 
-Six ADRs in total, each recording the alternative that was rejected — see [`docs/adr/`](https://github.com/c-ibarra/graphify-daemon/tree/main/docs/adr) in the repository.
+Six ADRs in total, each recording the alternative that was rejected — see [`docs/adr/`](https://github.com/c-ibarra/graphify-daemon-portfolio/tree/main/docs/adr) in the repository.
 
 ## Benchmarks
 
@@ -68,7 +68,7 @@ Measured against a deterministic synthetic graph (21,000 nodes, seed 42) — any
 | `shortest_path` | 282.16 ms | 321.41 ms | 359.61 ms |
 
 <Callout type="info" title="Read the number with its caveat">
-  Token reduction (measured against the real 21,123-node production graph) is ~8,700x — a deliberate worst-case upper bound, not a realistic session budget. "Naive" means re-reading the *entire* vault for every single question; no actual workflow does that. See the [full caveat](https://github.com/c-ibarra/graphify-daemon#token-reduction) in the README.
+  Token reduction (measured against the real 21,123-node production graph) is ~8,700x — a deliberate worst-case upper bound, not a realistic session budget. "Naive" means re-reading the *entire* vault for every single question; no actual workflow does that. See the [full caveat](https://github.com/c-ibarra/graphify-daemon-portfolio#token-reduction) in the README.
 </Callout>
 
 ## Live
@@ -91,6 +91,6 @@ Python 3.12 · `mcp` (Streamable HTTP) · Starlette + uvicorn · watchdog · SQL
 ## Read more
 
 <Cards>
-  <Card title="Repository" href="https://github.com/c-ibarra/graphify-daemon" external />
-  <Card title="Production bugs found & fixed" href="https://github.com/c-ibarra/graphify-daemon#production-bugs-found--fixed" external />
+  <Card title="Repository" href="https://github.com/c-ibarra/graphify-daemon-portfolio" external />
+  <Card title="Production bugs found & fixed" href="https://github.com/c-ibarra/graphify-daemon-portfolio#production-bugs-found--fixed" external />
 </Cards>
