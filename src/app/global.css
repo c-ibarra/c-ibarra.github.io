@@ -7,6 +7,9 @@
   --color-fd-primary: hsl(217, 91%, 45%);
   --color-fd-primary-foreground: hsl(0, 0%, 100%);
   --color-fd-ring: hsl(217, 91%, 55%);
+  /* Fumadocs' neutral muted text (#737373) is 4.1-4.35:1 on the light backgrounds it sits on
+     (nav links, search button, key hints), below WCAG AA (4.5:1). This is ~5.8:1 or better. */
+  --color-fd-muted-foreground: hsl(0, 0%, 36%);
 }
 
 .dark {
@@ -16,6 +19,8 @@
   --color-fd-primary: hsl(217, 91%, 64%);
   --color-fd-primary-foreground: hsl(222, 20%, 10%);
   --color-fd-ring: hsl(217, 91%, 60%);
+  /* Keep Fumadocs' own dark value: the lighter :root override above is for the light theme only. */
+  --color-fd-muted-foreground: hsla(0, 0%, 70%, 0.8);
 }
 
 html {
@@ -27,13 +32,11 @@ html > body[data-scroll-locked] {
   --removed-body-scroll-bar-size: 0px !important;
 }
 
-/* Home page: deep-ink accent and serif headings. Muted text is darkened in the light theme
-   because the neutral default is 4.35:1 on the page background, below WCAG AA (4.5:1); this is ~6:1.
-   Scoped to the home wrapper so /docs keeps the site-wide values above. */
+/* Home page: deep-ink accent and serif headings. Scoped to the home wrapper so /docs keeps
+   the site-wide accent above. */
 .home-accent {
   --color-fd-primary: hsl(222, 70%, 30%);
   --color-fd-primary-foreground: hsl(0, 0%, 100%);
-  --color-fd-muted-foreground: hsl(0, 0%, 36%);
 }
 
 .dark .home-accent {
