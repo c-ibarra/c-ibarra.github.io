@@ -43,7 +43,7 @@ const featuredProjects = [
   {
     title: 'Support requests, sorted right the first time',
     description:
-      'I led the delivery of an AI system that sorts incoming service requests by their nature and sends each one to the right team. It replaced older rule-based classifiers with a language-model system. To test it, I built synthetic test data and a second AI that judges answers on hard edge cases. The correct category is now the first choice 97% of the time, up from 35%. Resolution time fell from 24 hours to under 2 hours, and compliance with routing deadlines improved by 17%. It runs with automatic regression tests and response-time tracking.',
+      'I led the delivery of an AI system that sorts incoming service requests by their nature and sends each one to the right team. It replaced older rule-based classifiers with a language-model system. To test it, I built synthetic test data and a second AI that judges answers on hard edge cases. The correct category is now the first choice 97% of the time, up from 35%. Resolution time fell from 24 hours to under 2 hours, and compliance with routing deadlines improved by 17 percentage points. It runs with automatic regression tests and response-time tracking.',
     note: privateWorkNote,
     private: true,
     tags: ['NLP', 'MLOps', 'Automated testing'],
@@ -143,8 +143,9 @@ export default function HomePage() {
           </h1>
           <p className="mt-6 text-lg leading-relaxed text-fd-muted-foreground">
             I&apos;m Carlos, an AI engineer who builds with the people who run the business. After 20+
-            years delivering financial technology, I know what regulated teams need from AI: answers
-            that are correct, actions that are controlled, and decisions that can be checked.
+            years in technology, mostly for financial services, I know what regulated teams need from
+            AI: answers that are correct, actions that are controlled, and decisions that can be
+            checked.
           </p>
           <p className="mt-4 border-l-2 border-fd-primary pl-4 text-sm font-medium">
             Open to Forward Deployed AI Engineer and Applied AI roles in financial services.
@@ -264,7 +265,7 @@ export default function HomePage() {
         <section id="background" className="scroll-mt-20 pb-14">
           <SectionHead number="03">Background — where I come from</SectionHead>
           <p className="py-4 text-fd-muted-foreground">
-            20+ years building and delivering financial technology, from developer and architect to
+            20+ years in technology, mostly for financial services, from developer and architect to
             program lead.
           </p>
           <dl className="border-t border-fd-border">

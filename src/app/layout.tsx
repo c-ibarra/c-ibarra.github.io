@@ -9,7 +9,7 @@ const inter = Inter({
 
 const title = 'Carlos Ibarra — AI Engineer for Financial Services';
 const description =
-  'AI engineer with 20+ years delivering financial technology. I build AI with correct answers, controlled actions, and decisions that can be checked.';
+  'AI engineer with 20+ years in technology, mostly for financial services. I build AI with correct answers, controlled actions, and decisions that can be checked.';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://c-ibarra.github.io'),

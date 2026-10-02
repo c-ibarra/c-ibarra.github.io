@@ -9,7 +9,7 @@ export function GET() {
     (
       <DefaultImage
         title="AI you can put in front of an auditor"
-        description="An AI engineer with 20+ years delivering financial technology"
+        description="An AI engineer with 20+ years in technology, mostly for financial services"
         site={appName}
         primaryColor="hsl(217, 91%, 60%)"
         primaryTextColor="hsl(217, 91%, 70%)"
