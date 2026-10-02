@@ -26,3 +26,22 @@ html > body[data-scroll-locked] {
   margin-right: 0px !important;
   --removed-body-scroll-bar-size: 0px !important;
 }
+
+/* Home page: deep-ink accent and serif headings. Muted text is darkened in the light theme
+   because the neutral default is 4.35:1 on the page background, below WCAG AA (4.5:1); this is ~6:1.
+   Scoped to the home wrapper so /docs keeps the site-wide values above. */
+.home-accent {
+  --color-fd-primary: hsl(222, 70%, 30%);
+  --color-fd-primary-foreground: hsl(0, 0%, 100%);
+  --color-fd-muted-foreground: hsl(0, 0%, 36%);
+}
+
+.dark .home-accent {
+  --color-fd-primary: hsl(217, 91%, 70%);
+  --color-fd-primary-foreground: hsl(222, 20%, 10%);
+  --color-fd-muted-foreground: hsl(0, 0%, 70%);
+}
+
+.home-serif {
+  font-family: ui-serif, Georgia, 'Times New Roman', serif;
+}

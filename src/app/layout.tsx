@@ -7,26 +7,27 @@ const inter = Inter({
   subsets: ['latin'],
 });
 
+const title = 'Carlos Ibarra — AI Engineer for Financial Services';
+const description =
+  'AI engineer with 20+ years delivering financial technology. I build AI with correct answers, controlled actions, and decisions that can be checked.';
+
 export const metadata: Metadata = {
   metadataBase: new URL('https://c-ibarra.github.io'),
   title: {
-    default: 'Carlos Ibarra — Data Science & AI Engineer',
+    default: title,
     template: '%s | Carlos Ibarra',
   },
-  description:
-    'Program and Release Manager with 20+ years of technical program leadership, now building applied AI/ML systems — context engineering, agentic systems, and LLM infrastructure.',
+  description,
   openGraph: {
     type: 'website',
-    title: 'Carlos Ibarra — Data Science & AI Engineer',
-    description:
-      'Program and Release Manager with 20+ years of technical program leadership, now building applied AI/ML systems — context engineering, agentic systems, and LLM infrastructure.',
+    title,
+    description,
     images: ['/opengraph-image.png'],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Carlos Ibarra — Data Science & AI Engineer',
-    description:
-      'Program and Release Manager with 20+ years of technical program leadership, now building applied AI/ML systems — context engineering, agentic systems, and LLM infrastructure.',
+    title,
+    description,
     images: ['/opengraph-image.png'],
   },
 };

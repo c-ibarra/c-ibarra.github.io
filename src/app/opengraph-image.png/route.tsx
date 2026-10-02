@@ -8,8 +8,8 @@ export function GET() {
   return new ImageResponse(
     (
       <DefaultImage
-        title="Carlos Ibarra"
-        description="Data Science & AI Engineer — Program/Release Management background, building applied AI/ML systems"
+        title="AI you can put in front of an auditor"
+        description="An AI engineer with 20+ years delivering financial technology"
         site={appName}
         primaryColor="hsl(217, 91%, 60%)"
         primaryTextColor="hsl(217, 91%, 70%)"

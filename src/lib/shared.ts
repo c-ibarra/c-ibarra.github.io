@@ -2,6 +2,7 @@ export const appName = 'Carlos Ibarra';
 export const docsRoute = '/docs';
 export const docsImageRoute = '/og/docs';
 export const docsContentRoute = '/llms.mdx/docs';
+export const linkedinUrl = 'https://www.linkedin.com/in/carlosibarra';
 
 export const gitConfig = {
   user: 'c-ibarra',
