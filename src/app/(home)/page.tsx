@@ -62,21 +62,25 @@ const openProjects = [
   {
     title: 'MLOps Docs Agent',
     description: 'An assistant that answers from real documentation and shows its sources. Tested on 240 questions.',
+    repoUrl: 'https://github.com/c-ibarra/llm-zoomcamp-2026-capstone',
     writeupUrl: '/docs/llm-infrastructure/articles/mlops-docs-agent',
   },
   {
     title: 'graphify-daemon',
     description: 'Many AI agents sharing one memory.',
+    repoUrl: 'https://github.com/c-ibarra/graphify-daemon-portfolio',
     writeupUrl: '/docs/context-engineering/articles/graphify-daemon',
   },
   {
     title: 'AIProviderRouter',
     description: 'One interface for two AI providers, with every trade-off recorded.',
+    repoUrl: 'https://github.com/c-ibarra/AIProviderRouter',
     writeupUrl: '/docs/llm-infrastructure',
   },
   {
     title: 'ObsidianKnowledgeCurator',
     description: 'Knowledge lifecycle automation for a vault of 13,000+ notes.',
+    repoUrl: 'https://github.com/c-ibarra/ObsidianKnowledgeCurator',
     writeupUrl: '/docs/context-engineering',
   },
 ];
@@ -232,9 +236,15 @@ export default function HomePage() {
             >
               <div className="font-semibold">{project.title}</div>
               <p className="text-sm text-fd-muted-foreground">{project.description}</p>
-              <Link href={project.writeupUrl} className="text-sm font-medium text-fd-primary underline">
-                Read the case
-              </Link>
+              <div className="flex gap-3 text-sm font-medium">
+                <Link href={project.writeupUrl} className="text-fd-primary underline">
+                  Read the case
+                </Link>
+                <span className="text-fd-muted-foreground">·</span>
+                <a href={project.repoUrl} target="_blank" rel="noreferrer" className="text-fd-primary underline">
+                  Repository
+                </a>
+              </div>
             </div>
           ))}
 
