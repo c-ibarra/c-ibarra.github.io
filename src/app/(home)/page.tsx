@@ -19,7 +19,7 @@ const featuredProjects = [
   {
     title: 'Credit risk, scored in minutes',
     description:
-      "I designed an AI credit-scoring system for a fintech company that advances cash to businesses. An AI model reads each company's balance sheet from PDF filings, and a risk model scores it using that data plus credit-bureau records. Assessment time fell from 6–11 hours to about 20 minutes, and risk prediction improved by 25%.",
+      "I designed an AI credit-scoring system for a fintech company that advances cash to businesses. An AI model reads each company's balance sheet from PDF filings, and a risk model scores it using that data plus credit-bureau records. Assessment time fell from 6–11 hours to about 20 minutes.",
     note: privateWorkNote,
     private: true,
   },
